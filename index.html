@@ -484,19 +484,19 @@
                 navName: '6. วันที่',
                 title: '📅 หมวดที่ 6: วันที่ และวันสำคัญ (Dates)',
                 items: [
-                    { hiragana: "ついたち", kanji: "1日", thai: "วันที่ 1", icon: "1️⃣" },
-                    { hiragana: "ふつか", kanji: "2日", thai: "วันที่ 2 / 2 วัน", icon: "2️⃣" },
-                    { hiragana: "みっか", kanji: "3日", thai: "วันที่ 3 / 3 วัน", icon: "3️⃣" },
-                    { hiragana: "よっか", kanji: "4日", thai: "วันที่ 4 / 4 วัน", icon: "4️⃣" },
-                    { hiragana: "いつか", kanji: "5日", thai: "วันที่ 5 / 5 วัน", icon: "5️⃣" },
-                    { hiragana: "むいか", kanji: "6日", thai: "วันที่ 6 / 6 วัน", icon: "6️⃣" },
-                    { hiragana: "なのか", kanji: "7日", thai: "วันที่ 7 / 7 วัน", icon: "7️⃣" },
-                    { hiragana: "ようか", kanji: "8日", thai: "วันที่ 8 / 8 วัน", icon: "8️⃣" },
-                    { hiragana: "ここのか", kanji: "9日", thai: "วันที่ 9 / 9 วัน", icon: "9️⃣" },
-                    { hiragana: "とおか", kanji: "10日", thai: "วันที่ 10 / 10 วัน", icon: "🔟" },
-                    { hiragana: "じゅうよっか", kanji: "14日", thai: "วันที่ 14 / 14 วัน", icon: "1️⃣4️⃣" },
-                    { hiragana: "はつか", kanji: "20日", thai: "วันที่ 20 / 20 วัน", icon: "2️⃣0️⃣" },
-                    { hiragana: "にじゅうよっか", kanji: "24日", thai: "วันที่ 24 / 24 วัน", icon: "2️⃣4️⃣" },
+                    { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "1️⃣" },
+                    { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "2️⃣" },
+                    { hiragana: "みっか", kanji: "-", thai: "วันที่ 3 / 3 วัน", icon: "3️⃣" },
+                    { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "4️⃣" },
+                    { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "5️⃣" },
+                    { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "6️⃣" },
+                    { hiragana: "なのか", kanji: "-", thai: "วันที่ 7 / 7 วัน", icon: "7️⃣" },
+                    { hiragana: "ようか", kanji: "-", thai: "วันที่ 8 / 8 วัน", icon: "8️⃣" },
+                    { hiragana: "ここのか", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "9️⃣" },
+                    { hiragana: "とおか", kanji: "-", thai: "วันที่ 10 / 10 วัน", icon: "🔟" },
+                    { hiragana: "じゅうよっか", kanji: "-", thai: "วันที่ 14 / 14 วัน", icon: "1️⃣4️⃣" },
+                    { hiragana: "はつか", kanji: "-", thai: "วันที่ 20 / 20 วัน", icon: "2️⃣0️⃣" },
+                    { hiragana: "にじゅうよっか", kanji: "-", thai: "วันที่ 24 / 24 วัน", icon: "2️⃣4️⃣" },
                     { hiragana: "ーにち", kanji: "―日", thai: "วันที่... / ...วัน", icon: "📆" },
                     { hiragana: "なんにち", kanji: "何日", thai: "วันที่เท่าไร / กี่วัน", icon: "❓" },
                     { hiragana: "いつ", kanji: "-", thai: "เมื่อไร", icon: "⏰" },
@@ -581,9 +581,8 @@
         function shuffleCards() {
             const cards = document.querySelectorAll('.card');
             
-            // Phase 1: Apply shuffle movement effect to existing cards
             cards.forEach(card => {
-                card.classList.remove('flipped'); // Reset flip first
+                card.classList.remove('flipped');
                 const randomX = (Math.random() - 0.5) * 60;
                 const randomY = (Math.random() - 0.5) * 40;
                 const randomRotate = (Math.random() - 0.5) * 25;
@@ -592,7 +591,6 @@
                 card.style.opacity = '0.3';
             });
 
-            // Phase 2: Perform actual data shuffle and re-render with pop-in
             setTimeout(() => {
                 for (let i = activeItems.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));

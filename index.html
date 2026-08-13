@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minna no Nihongo Lesson 5 - Japanese Flashcards</title>
     
-    <!-- Modern Google Fonts -->
+    <!-- Modern Google Fonts: Prompt (Thai) & Noto Sans JP / Zen Maru Gothic (Japanese) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Prompt:wght@300;400;500;600;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
@@ -85,7 +85,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .brand-badge {
@@ -126,7 +126,7 @@
             justify-content: center;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .nav-tab {
@@ -164,7 +164,7 @@
             padding: 12px 20px;
             border-radius: var(--radius-md);
             border: 1px solid #f1f3f5;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
         }
 
@@ -200,53 +200,19 @@
             color: var(--text-main);
         }
 
-        /* Audio & Control Toolbar */
-        .controls-toolbar {
+        /* Quick Tools */
+        .quick-tools {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            background: #ffffff;
-            padding: 12px 20px;
-            border-radius: var(--radius-md);
-            border: 1px solid #f1f3f5;
-            margin-bottom: 20px;
-        }
-
-        .audio-settings {
-            display: flex;
-            align-items: center;
+            justify-content: flex-end;
             gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .tool-select {
-            background: #f8f9fa;
-            border: 1px solid #e2e8f0;
-            padding: 7px 12px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            color: var(--text-main);
-            outline: none;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .tool-select:hover {
-            border-color: var(--primary);
-        }
-
-        .action-btns {
-            display: flex;
-            gap: 8px;
+            margin-bottom: 20px;
         }
 
         .tool-chip {
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            padding: 7px 16px;
-            border-radius: 10px;
+            padding: 8px 18px;
+            border-radius: 12px;
             font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-muted);
@@ -260,7 +226,7 @@
             background: var(--primary-soft);
         }
 
-        /* Cards Grid */
+        /* Modern 3D Flip Card Grid */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -268,6 +234,7 @@
             min-height: 320px;
         }
 
+        /* Card Entry Animation */
         @keyframes cardPopIn {
             from { opacity: 0; transform: scale(0.85) translateY(15px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
@@ -314,6 +281,7 @@
             text-align: center;
         }
 
+        /* Card Front Styling (Japanese Only) */
         .card-front {
             background: var(--card-bg);
             border: 1.5px solid #f1f3f5;
@@ -361,6 +329,7 @@
             transform: scale(1.15);
         }
 
+        /* Card Back Styling (Visual Icon + Meaning) */
         .card-back {
             background: var(--card-back-bg);
             color: #ffffff;
@@ -387,6 +356,7 @@
             font-size: 0.85rem;
         }
 
+        /* Responsive */
         @media (max-width: 640px) {
             .app-container { padding: 20px 15px; }
             .cards-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
@@ -394,8 +364,7 @@
             .jp-hiragana { font-size: 1.35rem; }
             .th-meaning { font-size: 1.05rem; }
             .visual-icon { font-size: 2rem; }
-            .controls-toolbar { flex-direction: column; align-items: stretch; }
-            .audio-settings { justify-content: space-between; }
+            .stepper-bar { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
@@ -410,7 +379,7 @@
             <p class="subtitle">บัตรคำศัพท์ภาษาญี่ปุ่นพร้อมเสียงอ่านและภาพประกอบ</p>
         </header>
 
-        <!-- Category Nav -->
+        <!-- Category Tabs Navigation -->
         <div class="category-nav" id="categoryNav"></div>
 
         <!-- Stepper Navigation -->
@@ -424,20 +393,10 @@
             </button>
         </div>
 
-        <!-- Controls Toolbar (Voice + Speed + Actions) -->
-        <div class="controls-toolbar">
-            <div class="audio-settings">
-                <select id="voiceSelect" class="tool-select" title="เลือกเสียงอ่านภาษาญี่ปุ่น"></select>
-                <select id="speedSelect" class="tool-select" title="ความเร็วเสียง">
-                    <option value="0.7">🐢 ช้าพิเศษ (0.7x)</option>
-                    <option value="0.85" selected>🌸 ช้ากำลังดี (0.85x)</option>
-                    <option value="1.0">⚡ ปกติ (1.0x)</option>
-                </select>
-            </div>
-            <div class="action-btns">
-                <button class="tool-chip" onclick="shuffleCards()">🔀 สลับการ์ด</button>
-                <button class="tool-chip" onclick="resetFlips()">🔄 หงายการ์ด</button>
-            </div>
+        <!-- Quick Action Tools -->
+        <div class="quick-tools">
+            <button class="tool-chip" onclick="shuffleCards()">🔀 สลับการ์ดสุ่มคำ</button>
+            <button class="tool-chip" onclick="resetFlips()">🔄 หงายการ์ดทั้งหมด</button>
         </div>
 
         <!-- Cards Grid -->
@@ -449,6 +408,7 @@
     </div>
 
     <script>
+        // Vocabulary dataset
         const vocabularyData = [
             {
                 id: 'verbs',
@@ -547,65 +507,11 @@
 
         let activeCategoryIndex = 0;
         let activeItems = [];
-        let availableVoices = [];
 
         function init() {
             renderNavTabs();
             loadCategory(0);
             initSakuraEffect();
-            setupVoiceOptions();
-        }
-
-        /* Voice Speech Setup */
-        function setupVoiceOptions() {
-            if ('speechSynthesis' in window) {
-                const loadVoices = () => {
-                    const voices = window.speechSynthesis.getVoices();
-                    availableVoices = voices.filter(v => v.lang.includes('ja') || v.lang.includes('JA'));
-                    
-                    const voiceSelect = document.getElementById('voiceSelect');
-                    voiceSelect.innerHTML = '';
-
-                    if (availableVoices.length > 0) {
-                        availableVoices.forEach((voice, index) => {
-                            const option = document.createElement('option');
-                            option.value = index;
-                            option.innerText = `🔊 ${voice.name.replace('Microsoft', '').replace('Google', '')}`;
-                            voiceSelect.appendChild(option);
-                        });
-                    } else {
-                        const option = document.createElement('option');
-                        option.innerText = '🔊 เสียงภาษาญี่ปุ่น (Default)';
-                        voiceSelect.appendChild(option);
-                    }
-                };
-
-                loadVoices();
-                if (window.speechSynthesis.onvoiceschanged !== undefined) {
-                    window.speechSynthesis.onvoiceschanged = loadVoices;
-                }
-            }
-        }
-
-        function playAudio(text) {
-            if ('speechSynthesis' in window) {
-                const cleanText = text.replace(/ー/g, '');
-                const utterance = new SpeechSynthesisUtterance(cleanText);
-                utterance.lang = 'ja-JP';
-
-                // Set speed
-                const speedVal = parseFloat(document.getElementById('speedSelect').value) || 0.85;
-                utterance.rate = speedVal;
-
-                // Set selected voice if available
-                const voiceIdx = document.getElementById('voiceSelect').value;
-                if (availableVoices[voiceIdx]) {
-                    utterance.voice = availableVoices[voiceIdx];
-                }
-
-                window.speechSynthesis.cancel();
-                window.speechSynthesis.speak(utterance);
-            }
         }
 
         function renderNavTabs() {
@@ -671,13 +577,16 @@
             });
         }
 
+        // Shuffle cards with dynamic visual movement animation
         function shuffleCards() {
             const cards = document.querySelectorAll('.card');
+            
             cards.forEach(card => {
                 card.classList.remove('flipped');
                 const randomX = (Math.random() - 0.5) * 60;
                 const randomY = (Math.random() - 0.5) * 40;
                 const randomRotate = (Math.random() - 0.5) * 25;
+                
                 card.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg) scale(0.8)`;
                 card.style.opacity = '0.3';
             });
@@ -693,6 +602,17 @@
 
         function resetFlips() {
             document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
+        }
+
+        function playAudio(text) {
+            if ('speechSynthesis' in window) {
+                const cleanText = text.replace(/ー/g, '');
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.85;
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+            }
         }
 
         function initSakuraEffect() {

@@ -618,6 +618,12 @@
 </head>
 <body>
 
+    <!-- Native Audio Source from Recording Clip -->
+    <audio id="nativeAudio" preload="auto">
+        <source src="lesson5.mp4" type="video/mp4">
+        <source src="lesson5.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="sakura-layer" id="sakuraLayer"></div>
 
     <div class="app-container">
@@ -694,16 +700,16 @@
     </div>
 
     <script>
-        // Vocabulary dataset with modern Lucide icon names
+        // Vocabulary dataset with exact audio timestamps from the lesson clip
         const vocabularyData = [
             {
                 id: 'verbs',
                 navName: '1. กริยา',
                 title: '🌸 หมวดที่ 1: คำกริยา (Verbs)',
                 items: [
-                    { hiragana: "いきます", kanji: "行きます", thai: "ไป", icon: "footprints" },
-                    { hiragana: "きます", kanji: "来ます", thai: "มา", icon: "corner-down-left" },
-                    { hiragana: "かえります", kanji: "帰ります", thai: "กลับ", icon: "home" }
+                    { hiragana: "いきます", kanji: "行きます", thai: "ไป", icon: "footprints", start: 3.0, end: 4.6 },
+                    { hiragana: "きます", kanji: "来ます", thai: "มา", icon: "corner-down-left", start: 4.8, end: 6.1 },
+                    { hiragana: "かえります", kanji: "帰ります", thai: "กลับ", icon: "home", start: 6.3, end: 7.9 }
                 ]
             },
             {
@@ -711,9 +717,9 @@
                 navName: '2. สถานที่',
                 title: '🏫 หมวดที่ 2: สถานที่ (Places)',
                 items: [
-                    { hiragana: "がっこう", kanji: "学校", thai: "โรงเรียน", icon: "graduation-cap" },
-                    { hiragana: "スーパー", kanji: "-", thai: "ซูเปอร์มาร์เก็ต", icon: "shopping-cart" },
-                    { hiragana: "えき", kanji: "駅", thai: "สถานีรถไฟ", icon: "map-pin" }
+                    { hiragana: "がっこう", kanji: "学校", thai: "โรงเรียน", icon: "graduation-cap", start: 8.0, end: 9.6 },
+                    { hiragana: "スーパー", kanji: "-", thai: "ซูเปอร์มาร์เก็ต", icon: "shopping-cart", start: 9.8, end: 11.5 },
+                    { hiragana: "えき", kanji: "駅", thai: "สถานีรถไฟ", icon: "map-pin", start: 11.8, end: 13.1 }
                 ]
             },
             {
@@ -721,15 +727,15 @@
                 navName: '3. ยานพาหนะ',
                 title: '🚆 หมวดที่ 3: ยานพาหนะ (Vehicles)',
                 items: [
-                    { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "plane" },
-                    { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "ship" },
-                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟฟ้า", icon: "train" },
-                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "subway" },
-                    { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "zap" },
-                    { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "bus" },
-                    { hiragana: "タクシー", kanji: "-", thai: "รถแท็กซี่", icon: "car" },
-                    { hiragana: "じてんしゃ", kanji: "自転車", thai: "จักรยาน", icon: "bike" },
-                    { hiragana: "あるいて", kanji: "歩いて", thai: "เดิน", icon: "footprints" }
+                    { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "plane", start: 13.3, end: 14.9 },
+                    { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "ship", start: 15.0, end: 16.3 },
+                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟฟ้า", icon: "train", start: 16.5, end: 17.9 },
+                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "subway", start: 18.0, end: 19.6 },
+                    { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "zap", start: 19.8, end: 21.6 },
+                    { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "bus", start: 21.8, end: 23.1 },
+                    { hiragana: "タクシー", kanji: "-", thai: "รถแท็กซี่", icon: "car", start: 23.3, end: 24.9 },
+                    { hiragana: "じてんしゃ", kanji: "自転車", thai: "จักรยาน", icon: "bike", start: 25.0, end: 26.6 },
+                    { hiragana: "あるいて", kanji: "歩いて", thai: "เดิน", icon: "footprints", start: 26.8, end: 28.3 }
                 ]
             },
             {
@@ -737,12 +743,12 @@
                 navName: '4. บุคคล',
                 title: '👥 หมวดที่ 4: บุคคล (People)',
                 items: [
-                    { hiragana: "ひと", kanji: "人", thai: "คน, ผู้คน", icon: "user" },
-                    { hiragana: "ともだち", kanji: "友達", thai: "เพื่อน", icon: "users" },
-                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนผู้ชาย", icon: "user-check" },
-                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนผู้หญิง", icon: "heart-handshake" },
-                    { hiragana: "かぞく", kanji: "家族", thai: "ครอบครัว", icon: "home" },
-                    { hiragana: "ひとりで", kanji: "一人で", thai: "คนเดียว", icon: "user-minus" }
+                    { hiragana: "ひと", kanji: "人", thai: "คน, ผู้คน", icon: "user", start: 28.5, end: 29.9 },
+                    { hiragana: "ともだち", kanji: "友達", thai: "เพื่อน", icon: "users", start: 30.0, end: 31.6 },
+                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนผู้ชาย", icon: "user-check", start: 31.8, end: 33.1 },
+                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนผู้หญิง", icon: "heart-handshake", start: 33.3, end: 34.9 },
+                    { hiragana: "かぞく", kanji: "家族", thai: "ครอบครัว", icon: "home", start: 35.0, end: 36.6 },
+                    { hiragana: "ひとりで", kanji: "一人で", thai: "คนเดียว", icon: "user-minus", start: 36.8, end: 38.3 }
                 ]
             },
             {
@@ -750,19 +756,19 @@
                 navName: '5. เวลา/ช่วงเวลา',
                 title: '⏰ หมวดที่ 5: เวลา/สัปดาห์/เดือน/ปี (Time)',
                 items: [
-                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "calendar-arrow-up" },
-                    { hiragana: "こんしゅう", kanji: "今週", thai: "สัปดาห์นี้", icon: "calendar-days" },
-                    { hiragana: "らいしゅう", kanji: "来週", thai: "สัปดาห์หน้า", icon: "calendar-plus" },
-                    { hiragana: "せんげつ", kanji: "先月", thai: "เดือนที่แล้ว", icon: "calendar-minus" },
-                    { hiragana: "こんげつ", kanji: "今月", thai: "เดือนนี้", icon: "calendar-check" },
-                    { hiragana: "らいげつ", kanji: "来月", thai: "เดือนหน้า", icon: "calendar-range" },
-                    { hiragana: "きょねん", kanji: "去年", thai: "ปีที่แล้ว", icon: "history" },
-                    { hiragana: "ことし", kanji: "今年", thai: "ปีนี้", icon: "sparkles" },
-                    { hiragana: "らいねん", kanji: "来年", thai: "ปีหน้า", icon: "rocket" },
-                    { hiragana: "ーねん", kanji: "―年", thai: "ปี...", icon: "hash" },
-                    { hiragana: "なんねん", kanji: "何年", thai: "ปีอะไร / กี่ปี", icon: "help-circle" },
-                    { hiragana: "ーがつ", kanji: "―月", thai: "เดือน...", icon: "calendar" },
-                    { hiragana: "なんがつ", kanji: "何月", thai: "เดือนอะไร", icon: "help-circle" }
+                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "calendar-arrow-up", start: 38.5, end: 40.0 },
+                    { hiragana: "こんしゅう", kanji: "今週", thai: "สัปดาห์นี้", icon: "calendar-days", start: 40.2, end: 41.8 },
+                    { hiragana: "らいしゅう", kanji: "来週", thai: "สัปดาห์หน้า", icon: "calendar-plus", start: 42.0, end: 43.6 },
+                    { hiragana: "せんげつ", kanji: "先月", thai: "เดือนที่แล้ว", icon: "calendar-minus", start: 43.8, end: 45.4 },
+                    { hiragana: "こんげつ", kanji: "今月", thai: "เดือนนี้", icon: "calendar-check", start: 45.6, end: 47.1 },
+                    { hiragana: "らいげつ", kanji: "来月", thai: "เดือนหน้า", icon: "calendar-range", start: 47.3, end: 48.9 },
+                    { hiragana: "きょねん", kanji: "去年", thai: "ปีที่แล้ว", icon: "history", start: 49.0, end: 50.6 },
+                    { hiragana: "ことし", kanji: "今年", thai: "ปีนี้", icon: "sparkles", start: 50.8, end: 52.3 },
+                    { hiragana: "らいねん", kanji: "来年", thai: "ปีหน้า", icon: "rocket", start: 52.5, end: 54.0 },
+                    { hiragana: "ーねん", kanji: "―年", thai: "ปี...", icon: "hash", start: 54.2, end: 55.6 },
+                    { hiragana: "なんねん", kanji: "何年", thai: "ปีอะไร / กี่ปี", icon: "help-circle", start: 55.8, end: 57.3 },
+                    { hiragana: "ーがつ", kanji: "―月", thai: "เดือน...", icon: "calendar", start: 57.5, end: 58.9 },
+                    { hiragana: "なんがつ", kanji: "何月", thai: "เดือนอะไร", icon: "help-circle", start: 59.0, end: 60.6 }
                 ]
             },
             {
@@ -770,29 +776,30 @@
                 navName: '6. วันที่',
                 title: '📅 หมวดที่ 6: วันที่ และวันสำคัญ (Dates)',
                 items: [
-                    { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "calendar-days" },
-                    { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "calendar-days" },
-                    { hiragana: "みっか", kanji: "-", thai: "วันที่ 3 / 3 วัน", icon: "calendar-days" },
-                    { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "calendar-days" },
-                    { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "calendar-days" },
-                    { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "calendar-days" },
-                    { hiragana: "なのか", kanji: "-", thai: "วันที่ 7 / 7 วัน", icon: "calendar-days" },
-                    { hiragana: "ようか", kanji: "-", thai: "วันที่ 8 / 8 วัน", icon: "calendar-days" },
-                    { hiragana: "ここのか", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "calendar-days" },
-                    { hiragana: "とおか", kanji: "-", thai: "วันที่ 10 / 10 วัน", icon: "calendar-days" },
-                    { hiragana: "じゅうよっか", kanji: "-", thai: "วันที่ 14 / 14 วัน", icon: "calendar-days" },
-                    { hiragana: "はつか", kanji: "-", thai: "วันที่ 20 / 20 วัน", icon: "calendar-days" },
-                    { hiragana: "にじゅうよっか", kanji: "-", thai: "วันที่ 24 / 24 วัน", icon: "calendar-days" },
-                    { hiragana: "ーにち", kanji: "―日", thai: "วันที่... / ...วัน", icon: "calendar" },
-                    { hiragana: "なんにち", kanji: "何日", thai: "วันที่เท่าไร / กี่วัน", icon: "help-circle" },
-                    { hiragana: "いつ", kanji: "-", thai: "เมื่อไร", icon: "clock" },
-                    { hiragana: "たんじょうび", kanji: "誕生日", thai: "วันเกิด", icon: "gift" }
+                    { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "calendar-days", start: 60.8, end: 62.3 },
+                    { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "calendar-days", start: 62.5, end: 63.9 },
+                    { hiragana: "みっか", kanji: "-", thai: "วันที่ 3 / 3 วัน", icon: "calendar-days", start: 64.0, end: 65.4 },
+                    { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "calendar-days", start: 65.5, end: 67.1 },
+                    { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "calendar-days", start: 67.2, end: 68.7 },
+                    { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "calendar-days", start: 68.8, end: 70.3 },
+                    { hiragana: "なのか", kanji: "-", thai: "วันที่ 7 / 7 วัน", icon: "calendar-days", start: 70.5, end: 71.9 },
+                    { hiragana: "ようか", kanji: "-", thai: "วันที่ 8 / 8 วัน", icon: "calendar-days", start: 72.0, end: 73.6 },
+                    { hiragana: "ここのか", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "calendar-days", start: 73.8, end: 75.4 },
+                    { hiragana: "とおか", kanji: "-", thai: "วันที่ 10 / 10 วัน", icon: "calendar-days", start: 75.6, end: 77.1 },
+                    { hiragana: "じゅうよっか", kanji: "-", thai: "วันที่ 14 / 14 วัน", icon: "calendar-days", start: 77.3, end: 79.1 },
+                    { hiragana: "はつか", kanji: "-", thai: "วันที่ 20 / 20 วัน", icon: "calendar-days", start: 79.3, end: 80.9 },
+                    { hiragana: "にじゅうよっか", kanji: "-", thai: "วันที่ 24 / 24 วัน", icon: "calendar-days", start: 81.0, end: 82.9 },
+                    { hiragana: "ーにち", kanji: "―日", thai: "วันที่... / ...วัน", icon: "calendar", start: 83.0, end: 84.6 },
+                    { hiragana: "なんにち", kanji: "何日", thai: "วันที่เท่าไร / กี่วัน", icon: "help-circle", start: 84.8, end: 86.4 },
+                    { hiragana: "いつ", kanji: "-", thai: "เมื่อไร", icon: "clock", start: 86.5, end: 87.9 },
+                    { hiragana: "たんじょうび", kanji: "誕生日", thai: "วันเกิด", icon: "gift", start: 88.0, end: 89.9 }
                 ]
             }
         ];
 
         let activeCategoryIndex = 0;
         let activeItems = [];
+        let audioTimer = null;
 
         function init() {
             renderNavTabs();
@@ -800,30 +807,38 @@
             initSakuraEffect();
         }
 
-        function getBestNaturalJapaneseVoice() {
-            if (!('speechSynthesis' in window)) return null;
-            const voices = window.speechSynthesis.getVoices();
-            const jaVoices = voices.filter(v => v.lang.includes('ja') || v.lang.includes('JA'));
-            if (jaVoices.length === 0) return null;
+        // Play audio from native file snippet, fallback to browser speech synthesis
+        function playAudio(item) {
+            const audio = document.getElementById('nativeAudio');
+            
+            if (audio && item && item.start !== undefined && item.end !== undefined) {
+                if (audioTimer) clearTimeout(audioTimer);
+                
+                audio.currentTime = item.start;
+                const playPromise = audio.play();
 
-            const naturalKeywords = ['Natural', 'Enhanced', 'Premium', 'Google', 'Kyoko', 'Otoya', 'Nanami', 'Keita', 'Online'];
-            for (let kw of naturalKeywords) {
-                const found = jaVoices.find(v => v.name.includes(kw));
-                if (found) return found;
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        const duration = (item.end - item.start) * 1000;
+                        audioTimer = setTimeout(() => {
+                            audio.pause();
+                        }, duration);
+                    }).catch(err => {
+                        // Fallback if audio file is not loaded
+                        playSpeechSynthesis(item.hiragana);
+                    });
+                }
+            } else {
+                playSpeechSynthesis(typeof item === 'string' ? item : item.hiragana);
             }
-            return jaVoices[0];
         }
 
-        function playAudio(text) {
+        function playSpeechSynthesis(text) {
             if ('speechSynthesis' in window) {
                 const cleanText = text.replace(/ー/g, '');
                 const utterance = new SpeechSynthesisUtterance(cleanText);
                 utterance.lang = 'ja-JP';
                 utterance.rate = 0.85;
-
-                const bestVoice = getBestNaturalJapaneseVoice();
-                if (bestVoice) utterance.voice = bestVoice;
-
                 window.speechSynthesis.cancel();
                 window.speechSynthesis.speak(utterance);
             }
@@ -878,7 +893,7 @@
                 card.innerHTML = `
                     <div class="card-inner">
                         <div class="card-front">
-                            <button class="audio-btn" title="ฟังเสียงอ่าน" onclick="playAudio('${item.hiragana}')">🔊</button>
+                            <button class="audio-btn" title="ฟังเสียงอ่าน">🔊</button>
                             <div class="jp-hiragana">${item.hiragana}</div>
                             ${kanjiMarkup}
                         </div>
@@ -888,6 +903,12 @@
                         </div>
                     </div>
                 `;
+
+                card.querySelector('.audio-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    playAudio(item);
+                };
+
                 grid.appendChild(card);
             });
 
@@ -967,7 +988,7 @@
                 const card = document.createElement('div');
                 card.className = 'drag-card';
                 card.dataset.id = word.hiragana;
-                card.dataset.hiragana = word.hiragana;
+                card.wordObj = word;
 
                 const kanjiTxt = (word.kanji && word.kanji !== '-') ? `<div style="font-size:1rem; opacity:0.8; font-weight:normal; margin-top:2px;">(${word.kanji})</div>` : '';
                 card.innerHTML = `<div>${word.hiragana}</div>${kanjiTxt}`;
@@ -1005,7 +1026,7 @@
             activeDragCard = card;
             card.classList.add('dragging');
 
-            playAudio(card.dataset.hiragana);
+            if (card.wordObj) playAudio(card.wordObj);
 
             dragCloneEl = card.cloneNode(true);
             dragCloneEl.className = 'drag-clone';
@@ -1086,10 +1107,6 @@
 
             activeDragCard.classList.remove('dragging');
             activeDragCard = null;
-        }
-
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = () => { getBestNaturalJapaneseVoice(); };
         }
 
         window.onload = init;

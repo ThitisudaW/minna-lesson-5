@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minna no Nihongo Lesson 5 - Japanese Flashcards</title>
+    <title>Minna no Nihongo Lesson 5 - Flashcards & Modern Drag Match Game</title>
     
-    <!-- Modern Google Fonts: Prompt (Thai) & Noto Sans JP / Zen Maru Gothic (Japanese) -->
+    <!-- Modern Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Prompt:wght@300;400;500;600;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #ff6b8b;
             --primary-light: #ff8ea7;
             --primary-soft: #fff0f3;
+            --secondary-teal: #14b8a6;
             --card-bg: #ffffff;
             --card-back-bg: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
             --text-main: #2d3436;
@@ -23,13 +24,16 @@
             --shadow-hover: 0 15px 35px rgba(255, 107, 139, 0.22);
             --radius-lg: 24px;
             --radius-md: 16px;
+            
+            --font-jp: "UD Digi Kyokasho N", "UD デジタル教科書体 N", "Klee One", "Noto Sans JP", sans-serif;
+            --font-th: 'Prompt', sans-serif;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Prompt', 'Noto Sans JP', sans-serif;
+            font-family: var(--font-th);
         }
 
         body {
@@ -43,9 +47,10 @@
             min-height: 100vh;
             padding: 30px 15px;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* Ambient Sakura Effect */
+        /* Ambient Sakura Layer */
         .sakura-layer {
             position: fixed;
             top: 0;
@@ -85,7 +90,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .brand-badge {
@@ -111,13 +116,49 @@
 
         h1 span {
             color: var(--primary);
-            font-family: 'Zen Maru Gothic', sans-serif;
+            font-family: var(--font-jp);
         }
 
         .subtitle {
             color: var(--text-muted);
             font-size: 0.95rem;
             font-weight: 400;
+        }
+
+        /* Segmented Mode Switcher */
+        .mode-switcher {
+            display: flex;
+            justify-content: center;
+            background: rgba(255, 204, 213, 0.3);
+            padding: 6px;
+            border-radius: 50px;
+            gap: 6px;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ffccd5;
+        }
+
+        .mode-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+
+        .mode-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.2);
+            font-weight: 700;
         }
 
         /* Category Nav */
@@ -138,7 +179,7 @@
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s ease;
         }
 
         .nav-tab:hover {
@@ -234,7 +275,6 @@
             min-height: 320px;
         }
 
-        /* Card Entry Animation */
         @keyframes cardPopIn {
             from { opacity: 0; transform: scale(0.85) translateY(15px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
@@ -281,15 +321,14 @@
             text-align: center;
         }
 
-        /* Card Front Styling (Japanese Only) */
         .card-front {
             background: var(--card-bg);
             border: 1.5px solid #f1f3f5;
         }
 
         .jp-hiragana {
-            font-family: 'Zen Maru Gothic', 'Noto Sans JP', sans-serif;
-            font-size: 1.7rem;
+            font-family: var(--font-jp);
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary);
             line-height: 1.2;
@@ -297,12 +336,13 @@
         }
 
         .jp-kanji {
-            font-size: 1rem;
+            font-family: var(--font-jp);
+            font-size: 1.05rem;
             color: var(--text-muted);
             background: #f8f9fa;
             padding: 3px 12px;
             border-radius: 8px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .audio-btn {
@@ -329,7 +369,6 @@
             transform: scale(1.15);
         }
 
-        /* Card Back Styling (Visual Icon + Meaning) */
         .card-back {
             background: var(--card-back-bg);
             color: #ffffff;
@@ -349,6 +388,169 @@
             letter-spacing: -0.2px;
         }
 
+        /* 🎯 MODERN DRAG & DROP MATCHING GAME SECTION */
+        .game-section {
+            display: none;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 25px;
+            border: 1.5px solid #ffccd5;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--primary-soft);
+            padding: 14px 22px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            border: 1px solid #ffccd5;
+        }
+
+        .game-stats {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            min-height: 380px;
+        }
+
+        .drag-pool, .drop-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .board-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        /* Draggable Japanese Cards */
+        .drag-card {
+            background: #ffffff;
+            border: 2px solid #ffb3c6;
+            border-radius: 16px;
+            padding: 14px 18px;
+            font-family: var(--font-jp);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(255, 107, 139, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .drag-card:hover {
+            transform: translateY(-2deg);
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.22);
+            border-color: var(--primary);
+        }
+
+        .drag-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        /* Touch Tracking Avatar */
+        .drag-clone {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%) scale(1.05);
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 14px 18px;
+            font-family: var(--font-jp);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 15px 30px rgba(255, 107, 139, 0.35);
+        }
+
+        /* Target Drop Zones */
+        .drop-zone {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 14px 18px;
+            min-height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .drop-zone-label {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .drop-zone.hovered {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            border-style: solid;
+            transform: scale(1.02);
+        }
+
+        .drop-zone.correct {
+            background: #e6fffa;
+            border-color: var(--secondary-teal);
+            border-style: solid;
+        }
+
+        .drop-zone.wrong-flash {
+            background: #ffe4e6;
+            border-color: #f43f5e;
+            animation: shake 0.35s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .game-win-banner {
+            display: none;
+            background: #e6fffa;
+            border: 2px solid var(--secondary-teal);
+            color: #0d9488;
+            padding: 18px;
+            border-radius: 18px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: cardPopIn 0.4s ease;
+        }
+
         footer {
             margin-top: 35px;
             text-align: center;
@@ -356,7 +558,6 @@
             font-size: 0.85rem;
         }
 
-        /* Responsive */
         @media (max-width: 640px) {
             .app-container { padding: 20px 15px; }
             .cards-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
@@ -365,6 +566,7 @@
             .th-meaning { font-size: 1.05rem; }
             .visual-icon { font-size: 2rem; }
             .stepper-bar { flex-direction: column; gap: 10px; }
+            .game-board { grid-template-columns: 1fr; gap: 20px; }
         }
     </style>
 </head>
@@ -376,31 +578,74 @@
         <header>
             <div class="brand-badge">MINNA NO NIHONGO</div>
             <h1><span>みんなの日本語</span> บทที่ 5</h1>
-            <p class="subtitle">บัตรคำศัพท์ภาษาญี่ปุ่นพร้อมเสียงอ่านและภาพประกอบ</p>
+            <p class="subtitle">บัตรคำศัพท์ภาษาญี่ปุ่นพร้อมเสียงอ่านและเกมจับคู่</p>
         </header>
 
-        <!-- Category Tabs Navigation -->
-        <div class="category-nav" id="categoryNav"></div>
-
-        <!-- Stepper Navigation -->
-        <div class="stepper-bar">
-            <button class="step-btn" id="prevBtn" onclick="navigateCategory(-1)">
-                <span>←</span> หน้าก่อนหน้า
-            </button>
-            <div class="cat-title" id="catTitle">หมวดคำศัพท์</div>
-            <button class="step-btn" id="nextBtn" onclick="navigateCategory(1)">
-                หน้าถัดไป <span>→</span>
-            </button>
+        <!-- Segmented Mode Switcher -->
+        <div class="mode-switcher">
+            <button class="mode-btn active" id="btnModeFlashcards" onclick="switchMode('flashcards')">🍱 บัตรคำศัพท์</button>
+            <button class="mode-btn" id="btnModeGame" onclick="switchMode('game')">🎯 เกมลากจับคู่คำศัพท์</button>
         </div>
 
-        <!-- Quick Action Tools -->
-        <div class="quick-tools">
-            <button class="tool-chip" onclick="shuffleCards()">🔀 สลับการ์ดสุ่มคำ</button>
-            <button class="tool-chip" onclick="resetFlips()">🔄 หงายการ์ดทั้งหมด</button>
+        <!-- FLASHCARDS SECTION -->
+        <div id="flashcardSection">
+            <div class="category-nav" id="categoryNav"></div>
+
+            <div class="stepper-bar">
+                <button class="step-btn" id="prevBtn" onclick="navigateCategory(-1)">
+                    <span>←</span> หน้าก่อนหน้า
+                </button>
+                <div class="cat-title" id="catTitle">หมวดคำศัพท์</div>
+                <button class="step-btn" id="nextBtn" onclick="navigateCategory(1)">
+                    หน้าถัดไป <span>→</span>
+                </button>
+            </div>
+
+            <div class="quick-tools">
+                <button class="tool-chip" onclick="shuffleCards()">🔀 สลับการ์ดสุ่มคำ</button>
+                <button class="tool-chip" onclick="resetFlips()">🔄 หงายการ์ดทั้งหมด</button>
+            </div>
+
+            <div class="cards-grid" id="cardsGrid"></div>
         </div>
 
-        <!-- Cards Grid -->
-        <div class="cards-grid" id="cardsGrid"></div>
+        <!-- 🎯 DRAG & DROP MATCHING GAME SECTION -->
+        <div class="game-section" id="gameSection">
+            <div class="game-header">
+                <div class="game-stats">
+                    <span>🎯 คะแนน: <span id="gameScore">0</span> / <span id="gameTotal">5</span></span>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <select id="gameCatSelect" onchange="startNewGame()" style="padding:6px 12px; border-radius:10px; border:1px solid #ffccd5; font-weight:bold; color:var(--text-main);">
+                        <option value="verbs">1. คำกริยา</option>
+                        <option value="places">2. สถานที่</option>
+                        <option value="transport">3. ยานพาหนะ</option>
+                        <option value="people">4. บุคคล</option>
+                        <option value="time">5. เวลา/ช่วงเวลา</option>
+                        <option value="dates">6. วันที่</option>
+                    </select>
+                    <button class="tool-chip" onclick="startNewGame()" style="background:var(--primary); color:white; border:none;">🔄 เริ่มใหม่</button>
+                </div>
+            </div>
+
+            <div class="game-win-banner" id="gameWinBanner">
+                🎉 ยินดีด้วย! คุณจับคู่คำศัพท์บทที่ 5 ถูกต้องทั้งหมด! 🌸✨
+            </div>
+
+            <div class="game-board">
+                <!-- Left: Japanese Cards Pool -->
+                <div>
+                    <div class="board-title">🌸 คำศัพท์ภาษาญี่ปุ่น (ลากการ์ดนี้)</div>
+                    <div class="drag-pool" id="dragPool"></div>
+                </div>
+
+                <!-- Right: Thai Meaning Drop Zones -->
+                <div>
+                    <div class="board-title">💡 ความหมายภาษาไทย (วางที่นี่)</div>
+                    <div class="drop-slots" id="dropSlots"></div>
+                </div>
+            </div>
+        </div>
 
         <footer>
             💡 แตะที่การ์ดเพื่อดูคำแปลและรูปภาพประกอบ | กดรูป 🔊 บนการ์ดเพื่อฟังเสียงอ่าน
@@ -408,7 +653,6 @@
     </div>
 
     <script>
-        // Vocabulary dataset
         const vocabularyData = [
             {
                 id: 'verbs',
@@ -437,7 +681,7 @@
                 items: [
                     { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "✈️" },
                     { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "🚢" },
-                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟฟ้า", icon: "🚃" },
+                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟ", icon: "🚃" },
                     { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "🚇" },
                     { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "🚅" },
                     { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "🚌" },
@@ -514,6 +758,35 @@
             initSakuraEffect();
         }
 
+        function getBestNaturalJapaneseVoice() {
+            if (!('speechSynthesis' in window)) return null;
+            const voices = window.speechSynthesis.getVoices();
+            const jaVoices = voices.filter(v => v.lang.includes('ja') || v.lang.includes('JA'));
+            if (jaVoices.length === 0) return null;
+
+            const naturalKeywords = ['Natural', 'Enhanced', 'Premium', 'Google', 'Kyoko', 'Otoya', 'Nanami', 'Keita', 'Online'];
+            for (let kw of naturalKeywords) {
+                const found = jaVoices.find(v => v.name.includes(kw));
+                if (found) return found;
+            }
+            return jaVoices[0];
+        }
+
+        function playAudio(text) {
+            if ('speechSynthesis' in window) {
+                const cleanText = text.replace(/ー/g, '');
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.85;
+
+                const bestVoice = getBestNaturalJapaneseVoice();
+                if (bestVoice) utterance.voice = bestVoice;
+
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
         function renderNavTabs() {
             const nav = document.getElementById('categoryNav');
             nav.innerHTML = '';
@@ -577,42 +850,26 @@
             });
         }
 
-        // Shuffle cards with dynamic visual movement animation
         function shuffleCards() {
-            const cards = document.querySelectorAll('.card');
-            
-            cards.forEach(card => {
-                card.classList.remove('flipped');
-                const randomX = (Math.random() - 0.5) * 60;
-                const randomY = (Math.random() - 0.5) * 40;
-                const randomRotate = (Math.random() - 0.5) * 25;
-                
-                card.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg) scale(0.8)`;
-                card.style.opacity = '0.3';
-            });
-
-            setTimeout(() => {
-                for (let i = activeItems.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [activeItems[i], activeItems[j]] = [activeItems[j], activeItems[i]];
-                }
-                renderCards();
-            }, 300);
+            for (let i = activeItems.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [activeItems[i], activeItems[j]] = [activeItems[j], activeItems[i]];
+            }
+            renderCards();
         }
 
         function resetFlips() {
             document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
         }
 
-        function playAudio(text) {
-            if ('speechSynthesis' in window) {
-                const cleanText = text.replace(/ー/g, '');
-                const utterance = new SpeechSynthesisUtterance(cleanText);
-                utterance.lang = 'ja-JP';
-                utterance.rate = 0.85;
-                window.speechSynthesis.cancel();
-                window.speechSynthesis.speak(utterance);
-            }
+        function switchMode(mode) {
+            document.getElementById('btnModeFlashcards').classList.toggle('active', mode === 'flashcards');
+            document.getElementById('btnModeGame').classList.toggle('active', mode === 'game');
+
+            document.getElementById('flashcardSection').style.display = (mode === 'flashcards') ? 'block' : 'none';
+            document.getElementById('gameSection').style.display = (mode === 'game') ? 'block' : 'none';
+
+            if (mode === 'game') startNewGame();
         }
 
         function initSakuraEffect() {
@@ -629,6 +886,157 @@
                 petal.style.animationDelay = `${Math.random() * 5}s`;
                 layer.appendChild(petal);
             }
+        }
+
+        /* 🎯 MODERN DRAG & DROP GAME LOGIC (WITH POINTER / TOUCH SUPPORT) */
+        let gameScore = 0;
+        let gameTotalWords = 0;
+        let activeDragCard = null;
+        let dragCloneEl = null;
+
+        function startNewGame() {
+            gameScore = 0;
+            document.getElementById('gameWinBanner').style.display = 'none';
+
+            const selectedCatId = document.getElementById('gameCatSelect').value;
+            const categoryObj = vocabularyData.find(cat => cat.id === selectedCatId) || vocabularyData[0];
+            
+            // Limit to max 6 words per game round for good layout
+            let words = [...categoryObj.items].sort(() => 0.5 - Math.random());
+            if (words.length > 6) words = words.slice(0, 6);
+
+            gameTotalWords = words.length;
+            document.getElementById('gameScore').innerText = '0';
+            document.getElementById('gameTotal').innerText = gameTotalWords;
+
+            // Render Japanese Drag Cards
+            const poolEl = document.getElementById('dragPool');
+            poolEl.innerHTML = '';
+            const shuffledJp = [...words].sort(() => 0.5 - Math.random());
+
+            shuffledJp.forEach((word) => {
+                const card = document.createElement('div');
+                card.className = 'drag-card';
+                card.dataset.id = word.hiragana;
+                card.dataset.hiragana = word.hiragana;
+
+                const kanjiTxt = (word.kanji && word.kanji !== '-') ? ` (${word.kanji})` : '';
+                card.innerHTML = `<span>${word.hiragana}${kanjiTxt}</span> <span>🔊</span>`;
+
+                // Touch & Pointer event bindings for seamless drag on all devices
+                card.onpointerdown = (e) => onDragStart(e, card);
+                poolEl.appendChild(card);
+            });
+
+            // Render Thai Drop Slots
+            const slotsEl = document.getElementById('dropSlots');
+            slotsEl.innerHTML = '';
+            const shuffledThai = [...words].sort(() => 0.5 - Math.random());
+
+            shuffledThai.forEach((word) => {
+                const slot = document.createElement('div');
+                slot.className = 'drop-zone';
+                slot.dataset.id = word.hiragana;
+                slot.innerHTML = `<div class="drop-zone-label">${word.icon} ${word.thai}</div>`;
+                slotsEl.appendChild(slot);
+            });
+        }
+
+        /* Universal Pointer/Touch Drag Handling */
+        function onDragStart(e, card) {
+            if (card.parentElement.classList.contains('drop-zone')) return;
+
+            e.preventDefault();
+            activeDragCard = card;
+            card.classList.add('dragging');
+
+            // Play voice when starting drag
+            playAudio(card.dataset.hiragana);
+
+            // Create floating clone
+            dragCloneEl = card.cloneNode(true);
+            dragCloneEl.className = 'drag-clone';
+            document.body.appendChild(dragCloneEl);
+
+            moveClone(e.clientX, e.clientY);
+
+            window.onpointermove = onDragMove;
+            window.onpointerup = onDragEnd;
+        }
+
+        function moveClone(x, y) {
+            if (dragCloneEl) {
+                dragCloneEl.style.left = `${x}px`;
+                dragCloneEl.style.top = `${y}px`;
+            }
+        }
+
+        function onDragMove(e) {
+            if (!activeDragCard) return;
+            moveClone(e.clientX, e.clientY);
+
+            // Hover effects on Drop Zones
+            document.querySelectorAll('.drop-zone:not(.correct)').forEach(zone => {
+                const rect = zone.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                    e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    zone.classList.add('hovered');
+                } else {
+                    zone.classList.remove('hovered');
+                }
+            });
+        }
+
+        function onDragEnd(e) {
+            if (!activeDragCard) return;
+
+            window.onpointermove = null;
+            window.onpointerup = null;
+
+            if (dragCloneEl) {
+                dragCloneEl.remove();
+                dragCloneEl = null;
+            }
+
+            // Find drop target under cursor
+            let droppedZone = null;
+            document.querySelectorAll('.drop-zone:not(.correct)').forEach(zone => {
+                zone.classList.remove('hovered');
+                const rect = zone.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                    e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    droppedZone = zone;
+                }
+            });
+
+            if (droppedZone) {
+                if (droppedZone.dataset.id === activeDragCard.dataset.id) {
+                    // Correct Match!
+                    droppedZone.classList.add('correct');
+                    droppedZone.appendChild(activeDragCard);
+                    activeDragCard.style.border = 'none';
+                    activeDragCard.style.boxShadow = 'none';
+                    activeDragCard.style.padding = '0';
+
+                    gameScore++;
+                    document.getElementById('gameScore').innerText = gameScore;
+
+                    if (gameScore === gameTotalWords) {
+                        document.getElementById('gameWinBanner').style.display = 'block';
+                    }
+                } else {
+                    // Wrong Match Shake Effect
+                    droppedZone.classList.add('wrong-flash');
+                    setTimeout(() => droppedZone.classList.remove('wrong-flash'), 400);
+                }
+            }
+
+            activeDragCard.classList.remove('dragging');
+            activeDragCard = null;
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => { getBestNaturalJapaneseVoice(); };
         }
 
         window.onload = init;

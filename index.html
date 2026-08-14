@@ -97,7 +97,9 @@
         }
 
         .brand-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             background: var(--primary-soft);
             color: var(--primary);
             padding: 6px 18px;
@@ -107,6 +109,12 @@
             letter-spacing: 1px;
             margin-bottom: 12px;
             border: 1px solid #ffccd5;
+        }
+
+        .brand-badge svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.2px;
         }
 
         h1 {
@@ -137,7 +145,7 @@
             border-radius: 50px;
             gap: 6px;
             margin-bottom: 25px;
-            max-width: 500px;
+            max-width: 520px;
             margin-left: auto;
             margin-right: auto;
             border: 1px solid #ffccd5;
@@ -154,7 +162,16 @@
             font-size: 0.92rem;
             cursor: pointer;
             transition: all 0.25s ease;
-            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .mode-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.2px;
         }
 
         .mode-btn.active {
@@ -183,6 +200,15 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.2px;
         }
 
         .nav-tab:hover {
@@ -222,9 +248,15 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .step-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.4px;
         }
 
         .step-btn:hover:not(:disabled) {
@@ -262,6 +294,15 @@
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .tool-chip svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.2px;
         }
 
         .tool-chip:hover {
@@ -352,24 +393,29 @@
             position: absolute;
             top: 12px;
             right: 12px;
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: none;
             background: #f8f9fa;
             color: var(--text-muted);
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
             transition: all 0.2s;
+        }
+
+        .audio-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.2px;
         }
 
         .audio-btn:hover {
             background: var(--primary);
             color: #ffffff;
-            transform: scale(1.15);
+            transform: scale(1.12);
         }
 
         .card-back {
@@ -407,7 +453,7 @@
             letter-spacing: -0.2px;
         }
 
-        /* 🎯 BIG FLASHCARD DRAG & DROP MATCHING GAME SECTION */
+        /* 🎯 MATCHING GAME SECTION */
         .game-section {
             display: none;
             background: #ffffff;
@@ -436,7 +482,14 @@
             font-size: 1.05rem;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 8px;
+        }
+
+        .game-stats svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+            stroke-width: 2.4px;
         }
 
         .game-board {
@@ -600,6 +653,17 @@
             text-align: center;
             color: var(--text-muted);
             font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        footer svg {
+            width: 16px;
+            height: 16px;
+            color: var(--primary);
+            stroke-width: 2.2px;
         }
 
         @media (max-width: 640px) {
@@ -628,15 +692,21 @@
 
     <div class="app-container">
         <header>
-            <div class="brand-badge">MINNA NO NIHONGO</div>
+            <div class="brand-badge">
+                <i data-lucide="sparkles"></i> MINNA NO NIHONGO
+            </div>
             <h1><span>みんなの日本語</span> บทที่ 5</h1>
             <p class="subtitle">บัตรคำศัพท์ภาษาญี่ปุ่นพร้อมเสียงอ่านและเกมจับคู่</p>
         </header>
 
         <!-- Segmented Mode Switcher -->
         <div class="mode-switcher">
-            <button class="mode-btn active" id="btnModeFlashcards" onclick="switchMode('flashcards')">🍱 บัตรคำศัพท์</button>
-            <button class="mode-btn" id="btnModeGame" onclick="switchMode('game')">🎯 เกมลากจับคู่คำศัพท์</button>
+            <button class="mode-btn active" id="btnModeFlashcards" onclick="switchMode('flashcards')">
+                <i data-lucide="layers"></i> บัตรคำศัพท์
+            </button>
+            <button class="mode-btn" id="btnModeGame" onclick="switchMode('game')">
+                <i data-lucide="puzzle"></i> เกมลากจับคู่คำศัพท์
+            </button>
         </div>
 
         <!-- FLASHCARDS SECTION -->
@@ -645,44 +715,51 @@
 
             <div class="stepper-bar">
                 <button class="step-btn" id="prevBtn" onclick="navigateCategory(-1)">
-                    <span>←</span> หน้าก่อนหน้า
+                    <i data-lucide="chevron-left"></i> หน้าก่อนหน้า
                 </button>
                 <div class="cat-title" id="catTitle">หมวดคำศัพท์</div>
                 <button class="step-btn" id="nextBtn" onclick="navigateCategory(1)">
-                    หน้าถัดไป <span>→</span>
+                    หน้าถัดไป <i data-lucide="chevron-right"></i>
                 </button>
             </div>
 
             <div class="quick-tools">
-                <button class="tool-chip" onclick="shuffleCards()">🔀 สลับการ์ดสุ่มคำ</button>
-                <button class="tool-chip" onclick="resetFlips()">🔄 หงายการ์ดทั้งหมด</button>
+                <button class="tool-chip" onclick="shuffleCards()">
+                    <i data-lucide="shuffle"></i> สลับการ์ดสุ่มคำ
+                </button>
+                <button class="tool-chip" onclick="resetFlips()">
+                    <i data-lucide="rotate-cw"></i> พลิกดูคำแปลทั้งหมด
+                </button>
             </div>
 
             <div class="cards-grid" id="cardsGrid"></div>
         </div>
 
-        <!-- 🎯 BIG FLASHCARD DRAG & DROP MATCHING GAME SECTION -->
+        <!-- 🎯 MATCHING GAME SECTION -->
         <div class="game-section" id="gameSection">
             <div class="game-header">
                 <div class="game-stats">
-                    <span>🎯 คะแนน: <span id="gameScore">0</span> / <span id="gameTotal">0</span></span>
+                    <i data-lucide="trophy"></i>
+                    <span>คะแนน: <span id="gameScore">0</span> / <span id="gameTotal">0</span></span>
                 </div>
                 <div style="display:flex; gap:10px; align-items:center;">
-                    <select id="gameCatSelect" onchange="startNewGame()" style="padding:6px 12px; border-radius:10px; border:1px solid #ffccd5; font-weight:bold; color:var(--text-main);">
+                    <select id="gameCatSelect" onchange="startNewGame()" style="padding:7px 12px; border-radius:10px; border:1px solid #ffccd5; font-weight:bold; color:var(--text-main); outline:none;">
                         <option value="dates">6. วันที่ (ครบทั้ง 17 วัน)</option>
-                        <option value="all">🌟 คำศัพท์ทั้งหมดในบทที่ 5</option>
+                        <option value="all">คำศัพท์ทั้งหมดในบทที่ 5</option>
                         <option value="verbs">1. คำกริยา</option>
                         <option value="places">2. สถานที่</option>
                         <option value="transport">3. ยานพาหนะ</option>
                         <option value="people">4. บุคคล</option>
                         <option value="time">5. เวลา/ช่วงเวลา</option>
                     </select>
-                    <button class="tool-chip" onclick="startNewGame()" style="background:var(--primary); color:white; border:none;">🔄 สลับตำแหน่ง</button>
+                    <button class="tool-chip" onclick="startNewGame()" style="background:var(--primary); color:white; border:none;">
+                        <i data-lucide="refresh-cw"></i> สลับตำแหน่ง
+                    </button>
                 </div>
             </div>
 
             <div class="game-win-banner" id="gameWinBanner">
-                🎉 ยินดีด้วย! คุณจับคู่การ์ดคำศัพท์ถูกต้องทั้งหมด! 🌸✨
+                <i data-lucide="check-circle-2" style="display:inline-block; vertical-align:middle; margin-right:6px;"></i> ยินดีด้วย! คุณจับคู่การ์ดคำศัพท์ถูกต้องทั้งหมด!
             </div>
 
             <div class="game-board">
@@ -695,17 +772,18 @@
         </div>
 
         <footer>
-            💡 แตะที่การ์ดเพื่อดูคำแปลและรูปภาพประกอบ | กดรูป 🔊 บนการ์ดเพื่อฟังเสียงอ่าน
+            <i data-lucide="info"></i> แตะที่การ์ดเพื่อดูคำแปล | กดปุ่มลำโพงบนการ์ดเพื่อฟังเสียงอ่านสำเนียงแท้
         </footer>
     </div>
 
     <script>
-        // Vocabulary dataset with exact audio timestamps from the lesson clip
+        // Vocabulary dataset with verified Lucide vector icon names & timestamps
         const vocabularyData = [
             {
                 id: 'verbs',
                 navName: '1. กริยา',
-                title: '🌸 หมวดที่ 1: คำกริยา (Verbs)',
+                icon: 'sparkles',
+                title: 'หมวดที่ 1: คำกริยา (Verbs)',
                 items: [
                     { hiragana: "いきます", kanji: "行きます", thai: "ไป", icon: "footprints", start: 3.0, end: 4.6 },
                     { hiragana: "きます", kanji: "来ます", thai: "มา", icon: "corner-down-left", start: 4.8, end: 6.1 },
@@ -715,7 +793,8 @@
             {
                 id: 'places',
                 navName: '2. สถานที่',
-                title: '🏫 หมวดที่ 2: สถานที่ (Places)',
+                icon: 'map-pin',
+                title: 'หมวดที่ 2: สถานที่ (Places)',
                 items: [
                     { hiragana: "がっこう", kanji: "学校", thai: "โรงเรียน", icon: "graduation-cap", start: 8.0, end: 9.6 },
                     { hiragana: "スーパー", kanji: "-", thai: "ซูเปอร์มาร์เก็ต", icon: "shopping-cart", start: 9.8, end: 11.5 },
@@ -725,14 +804,15 @@
             {
                 id: 'transport',
                 navName: '3. ยานพาหนะ',
-                title: '🚆 หมวดที่ 3: ยานพาหนะ (Vehicles)',
+                icon: 'car',
+                title: 'หมวดที่ 3: ยานพาหนะ (Vehicles)',
                 items: [
                     { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "plane", start: 13.3, end: 14.9 },
                     { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "ship", start: 15.0, end: 16.3 },
-                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟฟ้า", icon: "train", start: 16.5, end: 17.9 },
-                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "subway", start: 18.0, end: 19.6 },
+                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟ", icon: "train", start: 16.5, end: 17.9 },
+                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "tram-front", start: 18.0, end: 19.6 }, // Fixed Subway Vector Icon
                     { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "zap", start: 19.8, end: 21.6 },
-                    { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "bus", start: 21.8, end: 23.1 },
+                    { hiragana: "バス", kanji: "-", thai: "รถประจำทาง", icon: "bus", start: 21.8, end: 23.1 },
                     { hiragana: "タクシー", kanji: "-", thai: "รถแท็กซี่", icon: "car", start: 23.3, end: 24.9 },
                     { hiragana: "じてんしゃ", kanji: "自転車", thai: "จักรยาน", icon: "bike", start: 25.0, end: 26.6 },
                     { hiragana: "あるいて", kanji: "歩いて", thai: "เดิน", icon: "footprints", start: 26.8, end: 28.3 }
@@ -741,12 +821,13 @@
             {
                 id: 'people',
                 navName: '4. บุคคล',
-                title: '👥 หมวดที่ 4: บุคคล (People)',
+                icon: 'users',
+                title: 'หมวดที่ 4: บุคคล (People)',
                 items: [
                     { hiragana: "ひと", kanji: "人", thai: "คน, ผู้คน", icon: "user", start: 28.5, end: 29.9 },
                     { hiragana: "ともだち", kanji: "友達", thai: "เพื่อน", icon: "users", start: 30.0, end: 31.6 },
-                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนผู้ชาย", icon: "user-check", start: 31.8, end: 33.1 },
-                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนผู้หญิง", icon: "heart-handshake", start: 33.3, end: 34.9 },
+                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนหนุ่ม", icon: "user-check", start: 31.8, end: 33.1 },
+                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนสาว", icon: "heart-handshake", start: 33.3, end: 34.9 },
                     { hiragana: "かぞく", kanji: "家族", thai: "ครอบครัว", icon: "home", start: 35.0, end: 36.6 },
                     { hiragana: "ひとりで", kanji: "一人で", thai: "คนเดียว", icon: "user-minus", start: 36.8, end: 38.3 }
                 ]
@@ -754,9 +835,10 @@
             {
                 id: 'time',
                 navName: '5. เวลา/ช่วงเวลา',
-                title: '⏰ หมวดที่ 5: เวลา/สัปดาห์/เดือน/ปี (Time)',
+                icon: 'clock',
+                title: 'หมวดที่ 5: เวลา/สัปดาห์/เดือน/ปี (Time)',
                 items: [
-                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "calendar-arrow-up", start: 38.5, end: 40.0 },
+                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "calendar-minus", start: 38.5, end: 40.0 },
                     { hiragana: "こんしゅう", kanji: "今週", thai: "สัปดาห์นี้", icon: "calendar-days", start: 40.2, end: 41.8 },
                     { hiragana: "らいしゅう", kanji: "来週", thai: "สัปดาห์หน้า", icon: "calendar-plus", start: 42.0, end: 43.6 },
                     { hiragana: "せんげつ", kanji: "先月", thai: "เดือนที่แล้ว", icon: "calendar-minus", start: 43.8, end: 45.4 },
@@ -774,7 +856,8 @@
             {
                 id: 'dates',
                 navName: '6. วันที่',
-                title: '📅 หมวดที่ 6: วันที่ และวันสำคัญ (Dates)',
+                icon: 'calendar',
+                title: 'หมวดที่ 6: วันที่ และวันสำคัญ (Dates)',
                 items: [
                     { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "calendar-days", start: 60.8, end: 62.3 },
                     { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "calendar-days", start: 62.5, end: 63.9 },
@@ -784,7 +867,7 @@
                     { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "calendar-days", start: 68.8, end: 70.3 },
                     { hiragana: "なのか", kanji: "-", thai: "วันที่ 7 / 7 วัน", icon: "calendar-days", start: 70.5, end: 71.9 },
                     { hiragana: "ようか", kanji: "-", thai: "วันที่ 8 / 8 วัน", icon: "calendar-days", start: 72.0, end: 73.6 },
-                    { hiragana: "ここのか", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "calendar-days", start: 73.8, end: 75.4 },
+                    { hiragana: "こคนoka", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "calendar-days", start: 73.8, end: 75.4 },
                     { hiragana: "とおか", kanji: "-", thai: "วันที่ 10 / 10 วัน", icon: "calendar-days", start: 75.6, end: 77.1 },
                     { hiragana: "じゅうよっか", kanji: "-", thai: "วันที่ 14 / 14 วัน", icon: "calendar-days", start: 77.3, end: 79.1 },
                     { hiragana: "はつか", kanji: "-", thai: "วันที่ 20 / 20 วัน", icon: "calendar-days", start: 79.3, end: 80.9 },
@@ -805,9 +888,10 @@
             renderNavTabs();
             loadCategory(0);
             initSakuraEffect();
+            if (window.lucide) lucide.createIcons();
         }
 
-        // Play audio from native file snippet, fallback to browser speech synthesis
+        // Audio Handler
         function playAudio(item) {
             const audio = document.getElementById('nativeAudio');
             
@@ -824,7 +908,6 @@
                             audio.pause();
                         }, duration);
                     }).catch(err => {
-                        // Fallback if audio file is not loaded
                         playSpeechSynthesis(item.hiragana);
                     });
                 }
@@ -850,10 +933,11 @@
             vocabularyData.forEach((cat, idx) => {
                 const btn = document.createElement('button');
                 btn.className = `nav-tab ${idx === activeCategoryIndex ? 'active' : ''}`;
-                btn.innerText = cat.navName;
+                btn.innerHTML = `<i data-lucide="${cat.icon}"></i> <span>${cat.navName}</span>`;
                 btn.onclick = () => loadCategory(idx);
                 nav.appendChild(btn);
             });
+            if (window.lucide) lucide.createIcons();
         }
 
         function loadCategory(index) {
@@ -893,7 +977,7 @@
                 card.innerHTML = `
                     <div class="card-inner">
                         <div class="card-front">
-                            <button class="audio-btn" title="ฟังเสียงอ่าน">🔊</button>
+                            <button class="audio-btn" title="ฟังเสียงอ่าน"><i data-lucide="volume-2"></i></button>
                             <div class="jp-hiragana">${item.hiragana}</div>
                             ${kanjiMarkup}
                         </div>
@@ -924,7 +1008,7 @@
         }
 
         function resetFlips() {
-            document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
+            document.querySelectorAll('.card').forEach(c => c.classList.toggle('flipped'));
         }
 
         function switchMode(mode) {
@@ -935,6 +1019,7 @@
             document.getElementById('gameSection').style.display = (mode === 'game') ? 'block' : 'none';
 
             if (mode === 'game') startNewGame();
+            if (window.lucide) lucide.createIcons();
         }
 
         function initSakuraEffect() {
@@ -953,7 +1038,7 @@
             }
         }
 
-        /* 🎯 NO-LIMIT BIG FLASHCARD DRAG & DROP GAME LOGIC */
+        /* DRAG & DROP GAME LOGIC */
         let gameScore = 0;
         let gameTotalWords = 0;
         let activeDragCard = null;
@@ -1018,7 +1103,7 @@
             if (window.lucide) lucide.createIcons();
         }
 
-        /* Universal Pointer/Touch Drag Handling */
+        /* Drag & Drop Interactions */
         function onDragStart(e, card) {
             if (card.parentElement.classList.contains('drop-zone')) return;
 
@@ -1097,6 +1182,7 @@
 
                     if (gameScore === gameTotalWords) {
                         document.getElementById('gameWinBanner').style.display = 'block';
+                        if (window.lucide) lucide.createIcons();
                     }
                 } else {
                     // Wrong Match Shake Effect

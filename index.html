@@ -421,49 +421,65 @@
         }
 
         .game-board {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 25px;
             min-height: 380px;
         }
 
-        .drag-pool, .drop-slots {
+        .board-section {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
         .board-title {
             font-size: 1rem;
             font-weight: 700;
             color: var(--text-muted);
-            margin-bottom: 5px;
-            text-align: center;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Draggable Japanese Cards */
+        /* Compact Grid Layout for Pools & Drop Slots */
+        .drag-pool, .drop-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        /* Compact Draggable Cards */
         .drag-card {
             background: #ffffff;
             border: 2px solid #ffb3c6;
-            border-radius: 16px;
-            padding: 14px 18px;
+            border-radius: 14px;
+            padding: 8px 10px;
             font-family: var(--font-jp);
-            font-size: 1.25rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--primary);
             cursor: grab;
             user-select: none;
             touch-action: none;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 12px rgba(255, 107, 139, 0.1);
+            justify-content: center;
+            min-height: 55px;
+            box-shadow: 0 2px 6px rgba(255, 107, 139, 0.12);
             transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            text-align: center;
+            line-height: 1.2;
         }
 
         .drag-card:hover {
             transform: translateY(-2deg);
-            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.22);
+            box-shadow: 0 6px 15px rgba(255, 107, 139, 0.25);
             border-color: var(--primary);
         }
 
@@ -480,43 +496,47 @@
             transform: translate(-50%, -50%) scale(1.05);
             background: #ffffff;
             border: 2px solid var(--primary);
-            border-radius: 16px;
-            padding: 14px 18px;
+            border-radius: 14px;
+            padding: 8px 12px;
             font-family: var(--font-jp);
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--primary);
-            box-shadow: 0 15px 30px rgba(255, 107, 139, 0.35);
+            box-shadow: 0 12px 25px rgba(255, 107, 139, 0.35);
+            text-align: center;
         }
 
-        /* Target Drop Zones */
+        /* Compact Target Drop Zones */
         .drop-zone {
             background: #f8fafc;
             border: 2px dashed #cbd5e1;
-            border-radius: 16px;
-            padding: 14px 18px;
-            min-height: 65px;
+            border-radius: 14px;
+            padding: 8px 10px;
+            min-height: 55px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            text-align: center;
             transition: all 0.25s ease;
             position: relative;
         }
 
         .drop-zone-label {
-            font-size: 1.05rem;
+            font-size: 0.92rem;
             font-weight: 600;
             color: var(--text-main);
+            line-height: 1.25;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 2px;
         }
 
         .drop-zone.hovered {
             background: var(--primary-soft);
             border-color: var(--primary);
             border-style: solid;
-            transform: scale(1.02);
+            transform: scale(1.03);
         }
 
         .drop-zone.correct {
@@ -560,13 +580,15 @@
 
         @media (max-width: 640px) {
             .app-container { padding: 20px 15px; }
-            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
             .card { height: 165px; }
             .jp-hiragana { font-size: 1.35rem; }
             .th-meaning { font-size: 1.05rem; }
             .visual-icon { font-size: 2rem; }
             .stepper-bar { flex-direction: column; gap: 10px; }
-            .game-board { grid-template-columns: 1fr; gap: 20px; }
+            .drag-pool, .drop-slots { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+            .drag-card { font-size: 0.95rem; min-height: 50px; }
+            .drop-zone-label { font-size: 0.82rem; }
         }
     </style>
 </head>
@@ -613,10 +635,11 @@
         <div class="game-section" id="gameSection">
             <div class="game-header">
                 <div class="game-stats">
-                    <span>🎯 คะแนน: <span id="gameScore">0</span> / <span id="gameTotal">5</span></span>
+                    <span>🎯 คะแนน: <span id="gameScore">0</span> / <span id="gameTotal">0</span></span>
                 </div>
                 <div style="display:flex; gap:10px; align-items:center;">
                     <select id="gameCatSelect" onchange="startNewGame()" style="padding:6px 12px; border-radius:10px; border:1px solid #ffccd5; font-weight:bold; color:var(--text-main);">
+                        <option value="all">🌟 คำศัพท์ทั้งหมดในบทที่ 5</option>
                         <option value="verbs">1. คำกริยา</option>
                         <option value="places">2. สถานที่</option>
                         <option value="transport">3. ยานพาหนะ</option>
@@ -633,15 +656,15 @@
             </div>
 
             <div class="game-board">
-                <!-- Left: Japanese Cards Pool -->
-                <div>
-                    <div class="board-title">🌸 คำศัพท์ภาษาญี่ปุ่น (ลากการ์ดนี้)</div>
+                <!-- Top: Japanese Cards Drag Pool -->
+                <div class="board-section">
+                    <div class="board-title">🌸 1. คำศัพท์ภาษาญี่ปุ่น (ลากการ์ดนี้):</div>
                     <div class="drag-pool" id="dragPool"></div>
                 </div>
 
-                <!-- Right: Thai Meaning Drop Zones -->
-                <div>
-                    <div class="board-title">💡 ความหมายภาษาไทย (วางที่นี่)</div>
+                <!-- Bottom: Thai Meaning Drop Zones -->
+                <div class="board-section">
+                    <div class="board-title">💡 2. ความหมายภาษาไทย (ลากการ์ดลงที่นี่):</div>
                     <div class="drop-slots" id="dropSlots"></div>
                 </div>
             </div>
@@ -899,17 +922,24 @@
             document.getElementById('gameWinBanner').style.display = 'none';
 
             const selectedCatId = document.getElementById('gameCatSelect').value;
-            const categoryObj = vocabularyData.find(cat => cat.id === selectedCatId) || vocabularyData[0];
-            
-            // Limit to max 6 words per game round for good layout
-            let words = [...categoryObj.items].sort(() => 0.5 - Math.random());
-            if (words.length > 6) words = words.slice(0, 6);
+            let words = [];
+
+            if (selectedCatId === 'all') {
+                // Gather ALL words from Lesson 5
+                vocabularyData.forEach(cat => words.push(...cat.items));
+            } else {
+                const categoryObj = vocabularyData.find(cat => cat.id === selectedCatId);
+                if (categoryObj) words = [...categoryObj.items];
+            }
+
+            // Shuffle words for game round
+            words.sort(() => 0.5 - Math.random());
 
             gameTotalWords = words.length;
             document.getElementById('gameScore').innerText = '0';
             document.getElementById('gameTotal').innerText = gameTotalWords;
 
-            // Render Japanese Drag Cards
+            // Render Japanese Compact Drag Cards
             const poolEl = document.getElementById('dragPool');
             poolEl.innerHTML = '';
             const shuffledJp = [...words].sort(() => 0.5 - Math.random());
@@ -920,15 +950,15 @@
                 card.dataset.id = word.hiragana;
                 card.dataset.hiragana = word.hiragana;
 
-                const kanjiTxt = (word.kanji && word.kanji !== '-') ? ` (${word.kanji})` : '';
-                card.innerHTML = `<span>${word.hiragana}${kanjiTxt}</span> <span>🔊</span>`;
+                const kanjiTxt = (word.kanji && word.kanji !== '-') ? `<span style="font-size:0.8rem; opacity:0.8; font-weight:normal;">(${word.kanji})</span>` : '';
+                card.innerHTML = `<div>${word.hiragana} ${kanjiTxt}</div>`;
 
-                // Touch & Pointer event bindings for seamless drag on all devices
+                // Universal pointer event for touch/mouse dragging
                 card.onpointerdown = (e) => onDragStart(e, card);
                 poolEl.appendChild(card);
             });
 
-            // Render Thai Drop Slots
+            // Render Thai Compact Drop Slots
             const slotsEl = document.getElementById('dropSlots');
             slotsEl.innerHTML = '';
             const shuffledThai = [...words].sort(() => 0.5 - Math.random());
@@ -937,7 +967,7 @@
                 const slot = document.createElement('div');
                 slot.className = 'drop-zone';
                 slot.dataset.id = word.hiragana;
-                slot.innerHTML = `<div class="drop-zone-label">${word.icon} ${word.thai}</div>`;
+                slot.innerHTML = `<div class="drop-zone-label"><span>${word.icon}</span> <span>${word.thai}</span></div>`;
                 slotsEl.appendChild(slot);
             });
         }
@@ -950,10 +980,10 @@
             activeDragCard = card;
             card.classList.add('dragging');
 
-            // Play voice when starting drag
+            // Voice playback when initiating drag
             playAudio(card.dataset.hiragana);
 
-            // Create floating clone
+            // Floating clone under cursor/finger
             dragCloneEl = card.cloneNode(true);
             dragCloneEl.className = 'drag-clone';
             document.body.appendChild(dragCloneEl);
@@ -975,7 +1005,6 @@
             if (!activeDragCard) return;
             moveClone(e.clientX, e.clientY);
 
-            // Hover effects on Drop Zones
             document.querySelectorAll('.drop-zone:not(.correct)').forEach(zone => {
                 const rect = zone.getBoundingClientRect();
                 if (e.clientX >= rect.left && e.clientX <= rect.right &&
@@ -998,7 +1027,6 @@
                 dragCloneEl = null;
             }
 
-            // Find drop target under cursor
             let droppedZone = null;
             document.querySelectorAll('.drop-zone:not(.correct)').forEach(zone => {
                 zone.classList.remove('hovered');
@@ -1017,6 +1045,7 @@
                     activeDragCard.style.border = 'none';
                     activeDragCard.style.boxShadow = 'none';
                     activeDragCard.style.padding = '0';
+                    activeDragCard.style.background = 'transparent';
 
                     gameScore++;
                     document.getElementById('gameScore').innerText = gameScore;

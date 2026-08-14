@@ -3,6 +3,1481 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minna no Nihongo Lesson 5 - Flashcards & Complete Drag Match Game</title>
+    
+    <!-- Google Fonts: UD Digi Kyokasho N Fallbacks, Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff6b8b;
+            --primary-light: #ff8ea7;
+            --primary-soft: #fff0f3;
+            --secondary-teal: #14b8a6;
+            --card-bg: #ffffff;
+            --card-back-bg: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --shadow-soft: 0 10px 30px rgba(255, 107, 139, 0.12);
+            --shadow-hover: 0 15px 35px rgba(255, 107, 139, 0.22);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            
+            --font-jp: "UD Digi Kyokasho N", "UD デジタル教科書体 N", "Klee One", "Noto Sans JP", sans-serif;
+            --font-th: 'Prompt', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-th);
+        }
+
+        body {
+            background: #fff8f9;
+            background-image: 
+                radial-gradient(#ffccd5 1.5px, transparent 1.5px), 
+                radial-gradient(#ffccd5 1.5px, #fff8f9 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Sakura Layer */
+        .sakura-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .petal {
+            position: absolute;
+            background: #ffb3c6;
+            border-radius: 15px 0 15px 0;
+            opacity: 0.6;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0.1; }
+        }
+
+        .app-container {
+            max-width: 1040px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 35px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04), 0 10px 25px rgba(255, 107, 139, 0.08);
+            position: relative;
+            z-index: 20;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: var(--primary-soft);
+            color: var(--primary);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border: 1px solid #ffccd5;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        h1 span {
+            color: var(--primary);
+            font-family: var(--font-jp);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        /* Segmented Mode Switcher */
+        .mode-switcher {
+            display: flex;
+            justify-content: center;
+            background: rgba(255, 204, 213, 0.3);
+            padding: 6px;
+            border-radius: 50px;
+            gap: 6px;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ffccd5;
+        }
+
+        .mode-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+
+        .mode-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.2);
+            font-weight: 700;
+        }
+
+        /* Category Nav */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .nav-tab {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 10px 18px;
+            border-radius: 50px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-tab:hover {
+            background: var(--primary-soft);
+            color: var(--primary);
+            border-color: #ffccd5;
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
+            transform: translateY(-2deg);
+        }
+
+        /* Stepper Toolbar */
+        .stepper-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid #f1f3f5;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .step-btn {
+            background: #ffffff;
+            border: 1.5px solid #edf2f7;
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .step-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .cat-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Quick Tools */
+        .quick-tools {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tool-chip {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tool-chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        /* Modern 3D Flip Card Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+            min-height: 320px;
+        }
+
+        @keyframes cardPopIn {
+            from { opacity: 0; transform: scale(0.85) translateY(15px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .card {
+            height: 190px;
+            perspective: 1000px;
+            cursor: pointer;
+            animation: cardPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .card:hover .card-inner {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-front {
+            background: var(--card-bg);
+            border: 1.5px solid #f1f3f5;
+        }
+
+        .jp-hiragana {
+            font-family: var(--font-jp);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .jp-kanji {
+            font-family: var(--font-jp);
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            background: #f8f9fa;
+            padding: 3px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .audio-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: #f8f9fa;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .audio-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+            transform: scale(1.15);
+        }
+
+        .card-back {
+            background: var(--card-back-bg);
+            color: #ffffff;
+            transform: rotateY(180deg);
+            gap: 8px;
+        }
+
+        .visual-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+        }
+
+        .th-meaning {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.2px;
+        }
+
+        /* 🎯 BIG FLASHCARD DRAG & DROP MATCHING GAME SECTION */
+        .game-section {
+            display: none;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 25px;
+            border: 1.5px solid #ffccd5;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--primary-soft);
+            padding: 14px 22px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            border: 1px solid #ffccd5;
+        }
+
+        .game-stats {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Side by side Game Board */
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .drag-pool, .drop-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 6px;
+        }
+
+        /* BIG FLASHCARD STYLE DRAGGABLE CARDS */
+        .drag-card {
+            background: #ffffff;
+            border: 2px solid #ffb3c6;
+            border-radius: 20px;
+            padding: 18px;
+            min-height: 110px;
+            font-family: var(--font-jp);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.15);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            text-align: center;
+            line-height: 1.25;
+        }
+
+        .drag-card:hover {
+            transform: translateY(-3deg);
+            box-shadow: 0 12px 25px rgba(255, 107, 139, 0.25);
+            border-color: var(--primary);
+        }
+
+        .drag-card.dragging {
+            opacity: 0.4;
+            cursor: grabbing;
+        }
+
+        /* Touch Tracking Avatar */
+        .drag-clone {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%) scale(1.05);
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 18px;
+            font-family: var(--font-jp);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 15px 30px rgba(255, 107, 139, 0.35);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        /* BIG FLASHCARD STYLE TARGET DROP ZONES */
+        .drop-zone {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 15px 18px;
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .drop-zone-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .drop-zone.hovered {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            border-style: solid;
+            transform: scale(1.02);
+        }
+
+        .drop-zone.correct {
+            background: #e6fffa;
+            border-color: var(--secondary-teal);
+            border-style: solid;
+        }
+
+        .drop-zone.wrong-flash {
+            background: #ffe4e6;
+            border-color: #f43f5e;
+            animation: shake 0.35s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .game-win-banner {
+            display: none;
+            background: #e6fffa;
+            border: 2px solid var(--secondary-teal);
+            color: #0d9488;
+            padding: 18px;
+            border-radius: 18px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: cardPopIn 0.4s ease;
+        }
+
+        footer {
+            margin-top: 35px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            .app-container { padding: 20px 15px; }
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+            .card { height: 165px; }
+            .jp-hiragana { font-size: 1.35rem; }
+            .th-meaning { font-size: 1.05rem; }
+            .visual-icon { font-size: 2rem; }
+            .stepper-bar { flex-direction: column; gap: 10px; }
+            .game-board { grid-template-columns: 1fr; gap: 15px; }
+            .drag-card, .drop-zone { min-height: 95px; }
+            .drag-card { font-size: 1.3rem; }
+            .drop-zone-label { font-size: 1.05rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sakura-layer" id="sakuraLayer"></div>
+
+    <div class="app-container">
+        <header>
+            <div class="brand-badge">MINNA NO NIHONGO</div>
+            <h1><span>みんなの日本語</span> บทที่ 5</h1>
+            <p class="subtitle">บัตรคำศัพท์ภาษาญี่ปุ่นพร้อมเสียงอ่านและเกมจับคู่</p>
+        </header>
+
+        <!-- Segmented Mode Switcher -->
+        <div class="mode-switcher">
+            <button class="mode-btn active" id="btnModeFlashcards" onclick="switchMode('flashcards')">🍱 บัตรคำศัพท์</button>
+            <button class="mode-btn" id="btnModeGame" onclick="switchMode('game')">🎯 เกมลากจับคู่คำศัพท์</button>
+        </div>
+
+        <!-- FLASHCARDS SECTION -->
+        <div id="flashcardSection">
+            <div class="category-nav" id="categoryNav"></div>
+
+            <div class="stepper-bar">
+                <button class="step-btn" id="prevBtn" onclick="navigateCategory(-1)">
+                    <span>←</span> หน้าก่อนหน้า
+                </button>
+                <div class="cat-title" id="catTitle">หมวดคำศัพท์</div>
+                <button class="step-btn" id="nextBtn" onclick="navigateCategory(1)">
+                    หน้าถัดไป <span>→</span>
+                </button>
+            </div>
+
+            <div class="quick-tools">
+                <button class="tool-chip" onclick="shuffleCards()">🔀 สลับการ์ดสุ่มคำ</button>
+                <button class="tool-chip" onclick="resetFlips()">🔄 หงายการ์ดทั้งหมด</button>
+            </div>
+
+            <div class="cards-grid" id="cardsGrid"></div>
+        </div>
+
+        <!-- 🎯 BIG FLASHCARD DRAG & DROP MATCHING GAME SECTION -->
+        <div class="game-section" id="gameSection">
+            <div class="game-header">
+                <div class="game-stats">
+                    <span>🎯 คะแนน: <span id="gameScore">0</span> / <span id="gameTotal">0</span></span>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <select id="gameCatSelect" onchange="startNewGame()" style="padding:6px 12px; border-radius:10px; border:1px solid #ffccd5; font-weight:bold; color:var(--text-main);">
+                        <option value="dates">6. วันที่ (ครบทั้ง 17 วัน)</option>
+                        <option value="all">🌟 คำศัพท์ทั้งหมดในบทที่ 5</option>
+                        <option value="verbs">1. คำกริยา</option>
+                        <option value="places">2. สถานที่</option>
+                        <option value="transport">3. ยานพาหนะ</option>
+                        <option value="people">4. บุคคล</option>
+                        <option value="time">5. เวลา/ช่วงเวลา</option>
+                    </select>
+                    <button class="tool-chip" onclick="startNewGame()" style="background:var(--primary); color:white; border:none;">🔄 สลับตำแหน่ง</button>
+                </div>
+            </div>
+
+            <div class="game-win-banner" id="gameWinBanner">
+                🎉 ยินดีด้วย! คุณจับคู่การ์ดคำศัพท์ถูกต้องทั้งหมด! 🌸✨
+            </div>
+
+            <div class="game-board">
+                <!-- Left: Japanese Big Flashcards Drag Pool -->
+                <div class="drag-pool" id="dragPool"></div>
+
+                <!-- Right: Thai Meaning Big Target Drop Zones -->
+                <div class="drop-slots" id="dropSlots"></div>
+            </div>
+        </div>
+
+        <footer>
+            💡 แตะที่การ์ดเพื่อดูคำแปลและรูปภาพประกอบ | กดรูป 🔊 บนการ์ดเพื่อฟังเสียงอ่าน
+        </footer>
+    </div>
+
+    <script>
+        const vocabularyData = [
+            {
+                id: 'verbs',
+                navName: '1. กริยา',
+                title: '🌸 หมวดที่ 1: คำกริยา (Verbs)',
+                items: [
+                    { hiragana: "いきます", kanji: "行きます", thai: "ไป", icon: "🚶‍♂️" },
+                    { hiragana: "きます", kanji: "来ます", thai: "มา", icon: "🏃‍♀️" },
+                    { hiragana: "かえります", kanji: "帰ります", thai: "กลับ", icon: "🏠" }
+                ]
+            },
+            {
+                id: 'places',
+                navName: '2. สถานที่',
+                title: '🏫 หมวดที่ 2: สถานที่ (Places)',
+                items: [
+                    { hiragana: "がっこう", kanji: "学校", thai: "โรงเรียน", icon: "🏫" },
+                    { hiragana: "スーパー", kanji: "-", thai: "ซูเปอร์มาร์เก็ต", icon: "🛒" },
+                    { hiragana: "えき", kanji: "駅", thai: "สถานีรถไฟ", icon: "🚉" }
+                ]
+            },
+            {
+                id: 'transport',
+                navName: '3. ยานพาหนะ',
+                title: '🚆 หมวดที่ 3: ยานพาหนะ (Vehicles)',
+                items: [
+                    { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "✈️" },
+                    { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "🚢" },
+                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟ", icon: "🚃" },
+                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "🚇" },
+                    { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "🚅" },
+                    { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "🚌" },
+                    { hiragana: "タクシー", kanji: "-", thai: "รถแท็กซี่", icon: "🚕" },
+                    { hiragana: "じてんしゃ", kanji: "自転車", thai: "จักรยาน", icon: "🚲" },
+                    { hiragana: "あるいて", kanji: "歩いて", thai: "เดิน", icon: "👟" }
+                ]
+            },
+            {
+                id: 'people',
+                navName: '4. บุคคล',
+                title: '👥 หมวดที่ 4: บุคคล (People)',
+                items: [
+                    { hiragana: "ひと", kanji: "人", thai: "คน, ผู้คน", icon: "👤" },
+                    { hiragana: "ともだち", kanji: "友達", thai: "เพื่อน", icon: "🤝" },
+                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนผู้ชาย", icon: "👨" },
+                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนผู้หญิง", icon: "👩" },
+                    { hiragana: "かぞく", kanji: "家族", thai: "ครอบครัว", icon: "👨‍👩‍👧‍👦" },
+                    { hiragana: "ひとりで", kanji: "一人で", thai: "คนเดียว", icon: "🧍" }
+                ]
+            },
+            {
+                id: 'time',
+                navName: '5. เวลา/ช่วงเวลา',
+                title: '⏰ หมวดที่ 5: เวลา/สัปดาห์/เดือน/ปี (Time)',
+                items: [
+                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "⬅️📅" },
+                    { hiragana: "こんしゅう", kanji: "今週", thai: "สัปดาห์นี้", icon: "📅" },
+                    { hiragana: "らいしゅう", kanji: "来週", thai: "สัปดาห์หน้า", icon: "📅➡️" },
+                    { hiragana: "せんげつ", kanji: "先月", thai: "เดือนที่แล้ว", icon: "🌙⬅️" },
+                    { hiragana: "こんげつ", kanji: "今月", thai: "เดือนนี้", icon: "🌙" },
+                    { hiragana: "らいげつ", kanji: "来月", thai: "เดือนหน้า", icon: "🌙➡️" },
+                    { hiragana: "きょねん", kanji: "去年", thai: "ปีที่แล้ว", icon: "⏳" },
+                    { hiragana: "ことし", kanji: "今年", thai: "ปีนี้", icon: "✨" },
+                    { hiragana: "らいねん", kanji: "来年", thai: "ปีหน้า", icon: "🚀" },
+                    { hiragana: "ーねん", kanji: "―年", thai: "ปี...", icon: "🔢" },
+                    { hiragana: "なんねん", kanji: "何年", thai: "ปีอะไร / กี่ปี", icon: "❓" },
+                    { hiragana: "ーがつ", kanji: "―月", thai: "เดือน...", icon: "🗓️" },
+                    { hiragana: "なんがつ", kanji: "何月", thai: "เดือนอะไร", icon: "❓" }
+                ]
+            },
+            {
+                id: 'dates',
+                navName: '6. วันที่',
+                title: '📅 หมวดที่ 6: วันที่ และวันสำคัญ (Dates)',
+                items: [
+                    { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "1️⃣" },
+                    { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "2️⃣" },
+                    { hiragana: "みっか", kanji: "-", thai: "วันที่ 3 / 3 วัน", icon: "3️⃣" },
+                    { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "4️⃣" },
+                    { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "5️⃣" },
+                    { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "6️⃣" },
+                    { hiragana: "```html
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minna no Nihongo Lesson 5 - Flashcards & Big Card Drag Match Game</title>
+    
+    <!-- Google Fonts: UD Digi Kyokasho N Fallbacks, Prompt -->
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff6b8b;
+            --primary-light: #ff8ea7;
+            --primary-soft: #fff0f3;
+            --secondary-teal: #14b8a6;
+            --card-bg: #ffffff;
+            --card-back-bg: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --shadow-soft: 0 10px 30px rgba(255, 107, 139, 0.12);
+            --shadow-hover: 0 15px 35px rgba(255, 107, 139, 0.22);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            
+            --font-jp: "UD Digi Kyokasho N", "UD デジタル教科書体 N", "Klee One", "Noto Sans JP", sans-serif;
+            --font-th: 'Prompt', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-th);
+        }
+
+        body {
+            background: #fff8f9;
+            background-image: 
+                radial-gradient(#ffccd5 1.5px, transparent 1.5px), 
+                radial-gradient(#ffccd5 1.5px, #fff8f9 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Sakura Layer */
+        .sakura-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .petal {
+            position: absolute;
+            background: #ffb3c6;
+            border-radius: 15px 0 15px 0;
+            opacity: 0.6;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0.1; }
+        }
+
+        .app-container {
+            max-width: 1040px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 35px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04), 0 10px 25px rgba(255, 107, 139, 0.08);
+            position: relative;
+            z-index: 20;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: var(--primary-soft);
+            color: var(--primary);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border: 1px solid #ffccd5;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        h1 span {
+            color: var(--primary);
+            font-family: var(--font-jp);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        /* Segmented Mode Switcher */
+        .mode-switcher {
+            display: flex;
+            justify-content: center;
+            background: rgba(255, 204, 213, 0.3);
+            padding: 6px;
+            border-radius: 50px;
+            gap: 6px;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ffccd5;
+        }
+
+        .mode-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+
+        .mode-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.2);
+            font-weight: 700;
+        }
+
+        /* Category Nav */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .nav-tab {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 10px 18px;
+            border-radius: 50px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-tab:hover {
+            background: var(--primary-soft);
+            color: var(--primary);
+            border-color: #ffccd5;
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
+            transform: translateY(-2deg);
+        }
+
+        /* Stepper Toolbar */
+        .stepper-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid #f1f3f5;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .step-btn {
+            background: #ffffff;
+            border: 1.5px solid #edf2f7;
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .step-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .cat-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Quick Tools */
+        .quick-tools {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tool-chip {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tool-chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        /* Modern 3D Flip Card Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+            min-height: 320px;
+        }
+
+        @keyframes cardPopIn {
+            from { opacity: 0; transform: scale(0.85) translateY(15px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .card {
+            height: 190px;
+            perspective: 1000px;
+            cursor: pointer;
+            animation: cardPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .card:hover .card-inner {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-front {
+            background: var(--card-bg);
+            border: 1.5px solid #f1f3f5;
+        }
+
+        .jp-hiragana {
+            font-family: var(--font-jp);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .jp-kanji {
+            font-family: var(--font-jp);
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            background: #f8f9fa;
+            padding: 3px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .audio-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: #f8f9fa;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .audio-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+            transform: scale(1.15);
+        }
+
+        .card-back {
+            background: var(--card-back-bg);
+            color: #ffffff;
+            transform: rotateY(180deg);
+            gap: 8px;
+        }
+
+        .visual-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+        }
+
+        .th-meaning {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.2px;
+        }
+
+        /* 🎯 BIG FLASHCARD DRAG & DROP MATCHING GAME SECTION */
+        .game-section {
+            display: none;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 25px;
+            border: 1.5px solid #ffccd5;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--primary-soft);
+            padding: 14px 22px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            border: 1px solid #ffccd5;
+        }
+
+        .game-stats {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Side by side Game Board */
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .drag-pool, .drop-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* BIG FLASHCARD STYLE DRAGGABLE CARDS */
+        .drag-card {
+            background: #ffffff;
+            border: 2px solid #ffb3c6;
+            border-radius: 20px;
+            padding: 18px;
+            min-height: 110px;
+            font-family: var(--font-jp);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.15);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            text-align: center;
+            line-height: 1.25;
+        }
+
+        .drag-card:hover {
+            transform: translateY(-3deg);
+            box-shadow: 0 12px 25px rgba(255, 107, 139, 0.25);
+            border-color: var(--primary);
+        }
+
+        .drag-card.dragging {
+            opacity: 0.4;
+            cursor: grabbing;
+        }
+
+        /* Touch Tracking Avatar */
+        .drag-clone {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%) scale(1.05);
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 18px;
+            font-family: var(--font-jp);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 15px 30px rgba(255, 107, 139, 0.35);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        /* BIG FLASHCARD STYLE TARGET DROP ZONES */
+        .drop-zone {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 15px 18px;
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .drop-zone-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .drop-zone.hovered {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            border-style: solid;
+            transform: scale(1.02);
+        }
+
+        .drop-zone.correct {
+            background: #e6fffa;
+            border-color: var(--secondary-teal);
+            border-style: solid;
+        }
+
+        .drop-zone.wrong-flash {
+            background: #ffe4e6;
+            border-color: #f43f5e;
+            animation: shake 0.35s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .game-win-banner {
+            display: none;
+            background: #e6fffa;
+            border: 2px solid var(--secondary-teal);
+            color: #0d9488;
+            padding: 18px;
+            border-radius: 18px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: cardPopIn 0.4s ease;
+        }
+
+        footer {
+            margin-top: 35px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            .app-container { padding: 20px 15px; }
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+            .card { height: 165px; }
+            .jp-hiragana { font-size: 1.35rem; }
+            .th-meaning { font-size: 1.05rem; }
+            .visual-icon { font-size: 2rem; }
+            .stepper-bar { flex-direction: column; gap: 10px; }
+            .game-board { grid-template-columns: 1fr; gap: 15px; }
+            .drag-card, .drop-zone { min-height: 95px; }
+            .drag-card { font-size: 1.3rem; }
+            .drop-zone-label { font-size: 1.05rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sakura-layer" id="sakuraLayer"></div>
+
+    <div class="app-container">
+        <header>
+            <div class="brand-badge">MINNA NO NIHONGO</div>
+            <h1><span>みんなの日本語</span> บทที่ 5</h1>
+            <p class="subtitle">บัตรคำศัพท์ภาษาญี่ปุ่นพร้อมเสียงอ่านและเกมจับคู่</p>
+        </header>
+
+        <!-- Segmented Mode Switcher -->
+        <div class="mode-switcher">
+            <button class="mode-btn active" id="btnModeFlashcards" onclick="switchMode('flashcards')">🍱 บัตรคำศัพท์</button>
+            <button class="mode-btn" id="btnModeGame" onclick="switchMode('game')">🎯 เกมลากจับคู่คำศัพท์</button>
+        </div>
+
+        <!-- FLASHCARDS SECTION -->
+        <div id="flashcardSection">
+            <div class="category-nav" id="categoryNav"></div>
+
+            <div class="stepper-bar">
+                <button class="step-btn" id="prevBtn" onclick="navigateCategory(-1)">
+                    <span>←</span> หน้าก่อนหน้า
+                </button>
+                <div class="cat-title" id="catTitle">หมวดคำศัพท์</div>
+                <button class="step-btn" id="nextBtn" onclick="navigateCategory(1)">
+                    หน้าถัดไป <span>→</span>
+                </button>
+            </div>
+
+            <div class="quick-tools">
+                <button class="tool-chip" onclick="shuffleCards()">🔀 สลับการ์ดสุ่มคำ</button>
+                <button class="tool-chip" onclick="resetFlips()">🔄 หงายการ์ดทั้งหมด</button>
+            </div>
+
+            <div class="cards-grid" id="cardsGrid"></div>
+        </div>
+
+        <!-- 🎯 BIG FLASHCARD DRAG & DROP MATCHING GAME SECTION -->
+        <div class="game-section" id="gameSection">
+            <div class="game-header">
+                <div class="game-stats">
+                    <span>🎯 คะแนน: <span id="gameScore">0</span> / <span id="gameTotal">0</span></span>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <select id="gameCatSelect" onchange="startNewGame()" style="padding:6px 12px; border-radius:10px; border:1px solid #ffccd5; font-weight:bold; color:var(--text-main);">
+                        <option value="dates">6. วันที่ (ครบทั้ง 17 วัน)</option>
+                        <option value="all">🌟 คำศัพท์ทั้งหมดในบทที่ 5</option>
+                        <option value="verbs">1. คำกริยา</option>
+                        <option value="places">2. สถานที่</option>
+                        <option value="transport">3. ยานพาหนะ</option>
+                        <option value="people">4. บุคคล</option>
+                        <option value="time">5. เวลา/ช่วงเวลา</option>
+                    </select>
+                    <button class="tool-chip" onclick="startNewGame()" style="background:var(--primary); color:white; border:none;">🔄 สลับตำแหน่ง</button>
+                </div>
+            </div>
+
+            <div class="game-win-banner" id="gameWinBanner">
+                🎉 ยินดีด้วย! คุณจับคู่การ์ดคำศัพท์ถูกต้องทั้งหมด! 🌸✨
+            </div>
+
+            <div class="game-board">
+                <!-- Left: Japanese Big Flashcards Drag Pool -->
+                <div class="drag-pool" id="dragPool"></div>
+
+                <!-- Right: Thai Meaning Big Target Drop Zones -->
+                <div class="drop-slots" id="dropSlots"></div>
+            </div>
+        </div>
+
+        <footer>
+            💡 แตะที่การ์ดเพื่อดูคำแปลและรูปภาพประกอบ | กดรูป 🔊 บนการ์ดเพื่อฟังเสียงอ่าน
+        </footer>
+    </div>
+
+    <script>
+        const vocabularyData = [
+            {
+                id: 'verbs',
+                navName: '1. กริยา',
+                title: '🌸 หมวดที่ 1: คำกริยา (Verbs)',
+                items: [
+                    { hiragana: "いきます", kanji: "行きます", thai: "ไป", icon: "🚶‍♂️" },
+                    { hiragana: "きます", kanji: "来ます", thai: "มา", icon: "🏃‍♀️" },
+                    { hiragana: "かえります", kanji: "帰ります", thai: "กลับ", icon: "🏠" }
+                ]
+            },
+            {
+                id: 'places',
+                navName: '2. สถานที่',
+                title: '🏫 หมวดที่ 2: สถานที่ (Places)',
+                items: [
+                    { hiragana: "がっこう", kanji: "学校", thai: "โรงเรียน", icon: "🏫" },
+                    { hiragana: "スーパー", kanji: "-", thai: "ซูเปอร์มาร์เก็ต", icon: "🛒" },
+                    { hiragana: "えき", kanji: "駅", thai: "สถานีรถไฟ", icon: "🚉" }
+                ]
+            },
+            {
+                id: 'transport',
+                navName: '3. ยานพาหนะ',
+                title: '🚆 หมวดที่ 3: ยานพาหนะ (Vehicles)',
+                items: [
+                    { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "✈️" },
+                    { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "🚢" },
+                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟ", icon: "🚃" },
+                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "🚇" },
+                    { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "🚅" },
+                    { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "🚌" },
+                    { hiragana: "タクシー", kanji: "-", thai: "รถแท็กซี่", icon: "🚕" },
+                    { hiragana: "じてんしゃ", kanji: "自転車", thai: "จักรยาน", icon: "🚲" },
+                    { hiragana: "あるいて", kanji: "歩いて", thai: "เดิน", icon: "👟" }
+                ]
+            },
+            {
+                id: 'people',
+                navName: '4. บุคคล',
+                title: '👥 หมวดที่ 4: บุคคล (People)',
+                items: [
+                    { hiragana: "ひと", kanji: "人", thai: "คน, ผู้คน", icon: "👤" },
+                    { hiragana: "ともだち", kanji: "友達", thai: "เพื่อน", icon: "🤝" },
+                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนผู้ชาย", icon: "👨" },
+                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนผู้หญิง", icon: "👩" },
+                    { hiragana: "かぞく", kanji: "家族", thai: "ครอบครัว", icon: "👨‍👩‍👧‍👦" },
+                    { hiragana: "ひとりで", kanji: "一人で", thai: "คนเดียว", icon: "🧍" }
+                ]
+            },
+            {
+                id: 'time',
+                navName: '5. เวลา/ช่วงเวลา',
+                title: '⏰ หมวดที่ 5: เวลา/สัปดาห์/เดือน/ปี (Time)',
+                items: [
+                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "⬅️📅" },
+                    { hiragana: "こんしゅう", kanji: "今週", thai: "สัปดาห์นี้", icon: "📅" },
+                    { hiragana: "らいしゅう", kanji: "来週", thai: "สัปดาห์หน้า", icon: "📅➡️" },
+                    { hiragana: "せんげつ", kanji: "先月", thai: "เดือนที่แล้ว", icon: "🌙⬅️" },
+                    { hiragana: "こんげつ", kanji: "今月", thai: "เดือนนี้", icon: "🌙" },
+                    { hiragana: "らいげつ", kanji: "来月", thai: "เดือนหน้า", icon: "🌙➡️" },
+                    { hiragana: "きょねん", kanji: "去年", thai: "ปีที่แล้ว", icon: "⏳" },
+                    { hiragana: "ことし", kanji: "今年", thai: "ปีนี้", icon: "✨" },
+                    { hiragana: "らいねん", kanji: "来年", thai: "ปีหน้า", icon: "🚀" },
+                    { hiragana: "ーねん", kanji: "―年", thai: "ปี...", icon: "🔢" },
+                    { hiragana: "なんねん", kanji: "何年", thai: "ปีอะไร / กี่ปี", icon: "❓" },
+                    { hiragana: "ーがつ", kanji: "―月", thai: "เดือน...", icon: "🗓️" },
+                    { hiragana: "なんがつ", kanji: "何月", thai: "เดือนอะไร", icon: "❓" }
+                ]
+            },
+            {
+                id: 'dates',
+                navName: '6. วันที่',
+                title: '📅 หมวดที่ 6: วันที่ และวันสำคัญ (Dates)',
+                items: [
+                    { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "1️⃣" },
+                    { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "2️⃣" },
+                    { hiragana: "みっか", kanji: "-", thai: "วันที่ 3 / 3 วัน", icon: "3️⃣" },
+                    { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "4️⃣" },
+                    { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "5️⃣" },
+                    { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "6️⃣" },
+                    { hiragana: "```html
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minna no Nihongo Lesson 5 - Flashcards & Big Card Drag Match Game</title>
     
     <!-- Google Fonts: UD Digi Kyokasho N Fallbacks, Prompt -->
@@ -420,7 +1895,7 @@
             gap: 15px;
         }
 
-        /* Side by side Game Board (No scroll) */
+        /* Side by side Game Board */
         .game-board {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -439,7 +1914,7 @@
             border: 2px solid #ffb3c6;
             border-radius: 20px;
             padding: 18px;
-            min-height: 115px;
+            min-height: 110px;
             font-family: var(--font-jp);
             font-size: 1.6rem;
             font-weight: 700;
@@ -493,7 +1968,7 @@
             border: 2px dashed #cbd5e1;
             border-radius: 20px;
             padding: 15px 18px;
-            min-height: 115px;
+            min-height: 110px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -621,15 +2096,15 @@
                 </div>
                 <div style="display:flex; gap:10px; align-items:center;">
                     <select id="gameCatSelect" onchange="startNewGame()" style="padding:6px 12px; border-radius:10px; border:1px solid #ffccd5; font-weight:bold; color:var(--text-main);">
-                        <option value="all">🌟 สุ่มสลับคำศัพท์ในบทที่ 5</option>
+                        <option value="dates">6. วันที่ (ครบทั้ง 17 วัน)</option>
+                        <option value="all">🌟 คำศัพท์ทั้งหมดในบทที่ 5</option>
                         <option value="verbs">1. คำกริยา</option>
                         <option value="places">2. สถานที่</option>
                         <option value="transport">3. ยานพาหนะ</option>
                         <option value="people">4. บุคคล</option>
                         <option value="time">5. เวลา/ช่วงเวลา</option>
-                        <option value="dates">6. วันที่</option>
                     </select>
-                    <button class="tool-chip" onclick="startNewGame()" style="background:var(--primary); color:white; border:none;">🔄 รอบถัดไป</button>
+                    <button class="tool-chip" onclick="startNewGame()" style="background:var(--primary); color:white; border:none;">🔄 สลับตำแหน่ง</button>
                 </div>
             </div>
 
@@ -733,6 +2208,743 @@
                     { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "4️⃣" },
                     { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "5️⃣" },
                     { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "6️⃣" },
+                    { hiragana: "```html
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minna no Nihongo Lesson 5 - Flashcards & Big Card Drag Match Game</title>
+    
+    <!-- Google Fonts: UD Digi Kyokasho N Fallbacks, Prompt -->
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff6b8b;
+            --primary-light: #ff8ea7;
+            --primary-soft: #fff0f3;
+            --secondary-teal: #14b8a6;
+            --card-bg: #ffffff;
+            --card-back-bg: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --shadow-soft: 0 10px 30px rgba(255, 107, 139, 0.12);
+            --shadow-hover: 0 15px 35px rgba(255, 107, 139, 0.22);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            
+            --font-jp: "UD Digi Kyokasho N", "UD デジタル教科書体 N", "Klee One", "Noto Sans JP", sans-serif;
+            --font-th: 'Prompt', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-th);
+        }
+
+        body {
+            background: #fff8f9;
+            background-image: 
+                radial-gradient(#ffccd5 1.5px, transparent 1.5px), 
+                radial-gradient(#ffccd5 1.5px, #fff8f9 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Sakura Layer */
+        .sakura-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .petal {
+            position: absolute;
+            background: #ffb3c6;
+            border-radius: 15px 0 15px 0;
+            opacity: 0.6;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0.1; }
+        }
+
+        .app-container {
+            max-width: 1040px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 35px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04), 0 10px 25px rgba(255, 107, 139, 0.08);
+            position: relative;
+            z-index: 20;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: var(--primary-soft);
+            color: var(--primary);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border: 1px solid #ffccd5;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        h1 span {
+            color: var(--primary);
+            font-family: var(--font-jp);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        /* Segmented Mode Switcher */
+        .mode-switcher {
+            display: flex;
+            justify-content: center;
+            background: rgba(255, 204, 213, 0.3);
+            padding: 6px;
+            border-radius: 50px;
+            gap: 6px;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ffccd5;
+        }
+
+        .mode-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+
+        .mode-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.2);
+            font-weight: 700;
+        }
+
+        /* Category Nav */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .nav-tab {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 10px 18px;
+            border-radius: 50px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-tab:hover {
+            background: var(--primary-soft);
+            color: var(--primary);
+            border-color: #ffccd5;
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
+            transform: translateY(-2deg);
+        }
+
+        /* Stepper Toolbar */
+        .stepper-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid #f1f3f5;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .step-btn {
+            background: #ffffff;
+            border: 1.5px solid #edf2f7;
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .step-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .cat-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Quick Tools */
+        .quick-tools {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tool-chip {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tool-chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        /* Modern 3D Flip Card Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+            min-height: 320px;
+        }
+
+        @keyframes cardPopIn {
+            from { opacity: 0; transform: scale(0.85) translateY(15px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .card {
+            height: 190px;
+            perspective: 1000px;
+            cursor: pointer;
+            animation: cardPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .card:hover .card-inner {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-front {
+            background: var(--card-bg);
+            border: 1.5px solid #f1f3f5;
+        }
+
+        .jp-hiragana {
+            font-family: var(--font-jp);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .jp-kanji {
+            font-family: var(--font-jp);
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            background: #f8f9fa;
+            padding: 3px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .audio-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: #f8f9fa;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .audio-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+            transform: scale(1.15);
+        }
+
+        .card-back {
+            background: var(--card-back-bg);
+            color: #ffffff;
+            transform: rotateY(180deg);
+            gap: 8px;
+        }
+
+        .visual-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+        }
+
+        .th-meaning {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.2px;
+        }
+
+        /* 🎯 BIG FLASHCARD DRAG & DROP MATCHING GAME SECTION */
+        .game-section {
+            display: none;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 25px;
+            border: 1.5px solid #ffccd5;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--primary-soft);
+            padding: 14px 22px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            border: 1px solid #ffccd5;
+        }
+
+        .game-stats {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Side by side Game Board */
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .drag-pool, .drop-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* BIG FLASHCARD STYLE DRAGGABLE CARDS */
+        .drag-card {
+            background: #ffffff;
+            border: 2px solid #ffb3c6;
+            border-radius: 20px;
+            padding: 18px;
+            min-height: 110px;
+            font-family: var(--font-jp);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.15);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            text-align: center;
+            line-height: 1.25;
+        }
+
+        .drag-card:hover {
+            transform: translateY(-3deg);
+            box-shadow: 0 12px 25px rgba(255, 107, 139, 0.25);
+            border-color: var(--primary);
+        }
+
+        .drag-card.dragging {
+            opacity: 0.4;
+            cursor: grabbing;
+        }
+
+        /* Touch Tracking Avatar */
+        .drag-clone {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%) scale(1.05);
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 18px;
+            font-family: var(--font-jp);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 15px 30px rgba(255, 107, 139, 0.35);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        /* BIG FLASHCARD STYLE TARGET DROP ZONES */
+        .drop-zone {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 15px 18px;
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .drop-zone-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .drop-zone.hovered {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            border-style: solid;
+            transform: scale(1.02);
+        }
+
+        .drop-zone.correct {
+            background: #e6fffa;
+            border-color: var(--secondary-teal);
+            border-style: solid;
+        }
+
+        .drop-zone.wrong-flash {
+            background: #ffe4e6;
+            border-color: #f43f5e;
+            animation: shake 0.35s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .game-win-banner {
+            display: none;
+            background: #e6fffa;
+            border: 2px solid var(--secondary-teal);
+            color: #0d9488;
+            padding: 18px;
+            border-radius: 18px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: cardPopIn 0.4s ease;
+        }
+
+        footer {
+            margin-top: 35px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            .app-container { padding: 20px 15px; }
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+            .card { height: 165px; }
+            .jp-hiragana { font-size: 1.35rem; }
+            .th-meaning { font-size: 1.05rem; }
+            .visual-icon { font-size: 2rem; }
+            .stepper-bar { flex-direction: column; gap: 10px; }
+            .game-board { grid-template-columns: 1fr; gap: 15px; }
+            .drag-card, .drop-zone { min-height: 95px; }
+            .drag-card { font-size: 1.3rem; }
+            .drop-zone-label { font-size: 1.05rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sakura-layer" id="sakuraLayer"></div>
+
+    <div class="app-container">
+        <header>
+            <div class="brand-badge">MINNA NO NIHONGO</div>
+            <h1><span>みんなの日本語</span> บทที่ 5</h1>
+            <p class="subtitle">บัตรคำศัพท์ภาษาญี่ปุ่นพร้อมเสียงอ่านและเกมจับคู่</p>
+        </header>
+
+        <!-- Segmented Mode Switcher -->
+        <div class="mode-switcher">
+            <button class="mode-btn active" id="btnModeFlashcards" onclick="switchMode('flashcards')">🍱 บัตรคำศัพท์</button>
+            <button class="mode-btn" id="btnModeGame" onclick="switchMode('game')">🎯 เกมลากจับคู่คำศัพท์</button>
+        </div>
+
+        <!-- FLASHCARDS SECTION -->
+        <div id="flashcardSection">
+            <div class="category-nav" id="categoryNav"></div>
+
+            <div class="stepper-bar">
+                <button class="step-btn" id="prevBtn" onclick="navigateCategory(-1)">
+                    <span>←</span> หน้าก่อนหน้า
+                </button>
+                <div class="cat-title" id="catTitle">หมวดคำศัพท์</div>
+                <button class="step-btn" id="nextBtn" onclick="navigateCategory(1)">
+                    หน้าถัดไป <span>→</span>
+                </button>
+            </div>
+
+            <div class="quick-tools">
+                <button class="tool-chip" onclick="shuffleCards()">🔀 สลับการ์ดสุ่มคำ</button>
+                <button class="tool-chip" onclick="resetFlips()">🔄 หงายการ์ดทั้งหมด</button>
+            </div>
+
+            <div class="cards-grid" id="cardsGrid"></div>
+        </div>
+
+        <!-- 🎯 BIG FLASHCARD DRAG & DROP MATCHING GAME SECTION -->
+        <div class="game-section" id="gameSection">
+            <div class="game-header">
+                <div class="game-stats">
+                    <span>🎯 คะแนน: <span id="gameScore">0</span> / <span id="gameTotal">0</span></span>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <select id="gameCatSelect" onchange="startNewGame()" style="padding:6px 12px; border-radius:10px; border:1px solid #ffccd5; font-weight:bold; color:var(--text-main);">
+                        <option value="dates">6. วันที่ (ครบทั้ง 17 วัน)</option>
+                        <option value="all">🌟 คำศัพท์ทั้งหมดในบทที่ 5</option>
+                        <option value="verbs">1. คำกริยา</option>
+                        <option value="places">2. สถานที่</option>
+                        <option value="transport">3. ยานพาหนะ</option>
+                        <option value="people">4. บุคคล</option>
+                        <option value="time">5. เวลา/ช่วงเวลา</option>
+                    </select>
+                    <button class="tool-chip" onclick="startNewGame()" style="background:var(--primary); color:white; border:none;">🔄 สลับตำแหน่ง</button>
+                </div>
+            </div>
+
+            <div class="game-win-banner" id="gameWinBanner">
+                🎉 ยินดีด้วย! คุณจับคู่การ์ดคำศัพท์ถูกต้องทั้งหมด! 🌸✨
+            </div>
+
+            <div class="game-board">
+                <!-- Left: Japanese Big Flashcards Drag Pool -->
+                <div class="drag-pool" id="dragPool"></div>
+
+                <!-- Right: Thai Meaning Big Target Drop Zones -->
+                <div class="drop-slots" id="dropSlots"></div>
+            </div>
+        </div>
+
+        <footer>
+            💡 แตะที่การ์ดเพื่อดูคำแปลและรูปภาพประกอบ | กดรูป 🔊 บนการ์ดเพื่อฟังเสียงอ่าน
+        </footer>
+    </div>
+
+    <script>
+        const vocabularyData = [
+            {
+                id: 'verbs',
+                navName: '1. กริยา',
+                title: '🌸 หมวดที่ 1: คำกริยา (Verbs)',
+                items: [
+                    { hiragana: "いきます", kanji: "行きます", thai: "ไป", icon: "🚶‍♂️" },
+                    { hiragana: "きます", kanji: "来ます", thai: "มา", icon: "🏃‍♀️" },
+                    { hiragana: "かえります", kanji: "帰ります", thai: "กลับ", icon: "🏠" }
+                ]
+            },
+            {
+                id: 'places',
+                navName: '2. สถานที่',
+                title: '🏫 หมวดที่ 2: สถานที่ (Places)',
+                items: [
+                    { hiragana: "がっこう", kanji: "学校", thai: "โรงเรียน", icon: "🏫" },
+                    { hiragana: "スーパー", kanji: "-", thai: "ซูเปอร์มาร์เก็ต", icon: "🛒" },
+                    { hiragana: "えき", kanji: "駅", thai: "สถานีรถไฟ", icon: "🚉" }
+                ]
+            },
+            {
+                id: 'transport',
+                navName: '3. ยานพาหนะ',
+                title: '🚆 หมวดที่ 3: ยานพาหนะ (Vehicles)',
+                items: [
+                    { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "✈️" },
+                    { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "🚢" },
+                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟ", icon: "🚃" },
+                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "🚇" },
+                    { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "🚅" },
+                    { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "🚌" },
+                    { hiragana: "タクシー", kanji: "-", thai: "รถแท็กซี่", icon: "🚕" },
+                    { hiragana: "じてんしゃ", kanji: "自転車", thai: "จักรยาน", icon: "🚲" },
+                    { hiragana: "あるいて", kanji: "歩いて", thai: "เดิน", icon: "👟" }
+                ]
+            },
+            {
+                id: 'people',
+                navName: '4. บุคคล',
+                title: '👥 หมวดที่ 4: บุคคล (People)',
+                items: [
+                    { hiragana: "ひと", kanji: "人", thai: "คน, ผู้คน", icon: "👤" },
+                    { hiragana: "ともだち", kanji: "友達", thai: "เพื่อน", icon: "🤝" },
+                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนผู้ชาย", icon: "👨" },
+                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนผู้หญิง", icon: "👩" },
+                    { hiragana: "かぞく", kanji: "家族", thai: "ครอบครัว", icon: "👨‍👩‍👧‍👦" },
+                    { hiragana: "ひとりで", kanji: "一人で", thai: "คนเดียว", icon: "🧍" }
+                ]
+            },
+            {
+                id: 'time',
+                navName: '5. เวลา/ช่วงเวลา',
+                title: '⏰ หมวดที่ 5: เวลา/สัปดาห์/เดือน/ปี (Time)',
+                items: [
+                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "⬅️📅" },
+                    { hiragana: "こんしゅう", kanji: "今週", thai: "สัปดาห์นี้", icon: "📅" },
+                    { hiragana: "らいしゅう", kanji: "来週", thai: "สัปดาห์หน้า", icon: "📅➡️" },
+                    { hiragana: "せんげつ", kanji: "先月", thai: "เดือนที่แล้ว", icon: "🌙⬅️" },
+                    { hiragana: "こんげつ", kanji: "今月", thai: "เดือนนี้", icon: "🌙" },
+                    { hiragana: "らいげつ", kanji: "来月", thai: "เดือนหน้า", icon: "🌙➡️" },
+                    { hiragana: "きょねん", kanji: "去年", thai: "ปีที่แล้ว", icon: "⏳" },
+                    { hiragana: "ことし", kanji: "今年", thai: "ปีนี้", icon: "✨" },
+                    { hiragana: "らいねん", kanji: "来年", thai: "ปีหน้า", icon: "🚀" },
+                    { hiragana: "ーねん", kanji: "―年", thai: "ปี...", icon: "🔢" },
+                    { hiragana: "なんねん", kanji: "何年", thai: "ปีอะไร / กี่ปี", icon: "❓" },
+                    { hiragana: "ーがつ", kanji: "―月", thai: "เดือน...", icon: "🗓️" },
+                    { hiragana: "なんがつ", kanji: "何月", thai: "เดือนอะไร", icon: "❓" }
+                ]
+            },
+            {
+                id: 'dates',
+                navName: '6. วันที่',
+                title: '📅 หมวดที่ 6: วันที่ และวันสำคัญ (Dates)',
+                items: [
+                    { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "1️⃣" },
+                    { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "2️⃣" },
+                    { hiragana: "みっか", kanji: "-", thai: "วันที่ 3 / 3 วัน", icon: "3️⃣" },
+                    { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "4️⃣" },
+                    { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "5️⃣" },
+                    { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "6️⃣" },
+                    { hiragana: "```html
                     { hiragana: "なのか", kanji: "-", thai: "วันที่ 7 / 7 วัน", icon: "7️⃣" },
                     { hiragana: "ようか", kanji: "-", thai: "วันที่ 8 / 8 วัน", icon: "8️⃣" },
                     { hiragana: "ここのか", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "9️⃣" },
@@ -887,7 +3099,7 @@
             }
         }
 
-        /* 🎯 NO-SCROLL BIG FLASHCARD DRAG & DROP GAME LOGIC */
+        /* 🎯 NO-LIMIT BIG FLASHCARD DRAG & DROP GAME LOGIC */
         let gameScore = 0;
         let gameTotalWords = 0;
         let activeDragCard = null;
@@ -907,18 +3119,17 @@
                 if (categoryObj) words = [...categoryObj.items];
             }
 
-            // Shuffle words and pick 4 words per round so big cards fit on screen without scrolling!
+            // Shuffle words without slicing so ALL words in category are included
             words.sort(() => 0.5 - Math.random());
-            let roundWords = (words.length > 4) ? words.slice(0, 4) : words;
 
-            gameTotalWords = roundWords.length;
+            gameTotalWords = words.length;
             document.getElementById('gameScore').innerText = '0';
             document.getElementById('gameTotal').innerText = gameTotalWords;
 
             // Render Japanese Big Drag Cards
             const poolEl = document.getElementById('dragPool');
             poolEl.innerHTML = '';
-            const shuffledJp = [...roundWords].sort(() => 0.5 - Math.random());
+            const shuffledJp = [...words].sort(() => 0.5 - Math.random());
 
             shuffledJp.forEach((word) => {
                 const card = document.createElement('div');
@@ -929,7 +3140,6 @@
                 const kanjiTxt = (word.kanji && word.kanji !== '-') ? `<div style="font-size:1rem; opacity:0.8; font-weight:normal; margin-top:2px;">(${word.kanji})</div>` : '';
                 card.innerHTML = `<div>${word.hiragana}</div>${kanjiTxt}`;
 
-                // Pointer event for universal touch/mouse drag
                 card.onpointerdown = (e) => onDragStart(e, card);
                 poolEl.appendChild(card);
             });
@@ -937,7 +3147,7 @@
             // Render Thai Big Drop Slots
             const slotsEl = document.getElementById('dropSlots');
             slotsEl.innerHTML = '';
-            const shuffledThai = [...roundWords].sort(() => 0.5 - Math.random());
+            const shuffledThai = [...words].sort(() => 0.5 - Math.random());
 
             shuffledThai.forEach((word) => {
                 const slot = document.createElement('div');

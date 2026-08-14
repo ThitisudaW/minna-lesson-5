@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minna no Nihongo Lesson 5 - Flashcards & Big Card Drag Match Game</title>
     
-    <!-- Google Fonts: Klee One (UD Digi Kyokasho Fallback), Noto Sans JP, Prompt -->
+    <!-- Modern Japanese & Thai Fonts: UD Digi Kyokasho N Fallbacks, Zen Maru Gothic, Klee One, Prompt -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -25,7 +25,8 @@
             --radius-lg: 24px;
             --radius-md: 16px;
             
-            --font-jp: "UD Digi Kyokasho N", "UD デジタル教科書体 N", "Klee One", "Noto Sans JP", sans-serif;
+            /* UD Digi Kyokasho N Font Stack */
+            --font-jp: "UD Digi Kyokasho N", "UD デジタル教科書体 N", "Zen Maru Gothic", "Klee One", "Noto Sans JP", sans-serif;
             --font-th: 'Prompt', sans-serif;
         }
 
@@ -436,15 +437,15 @@
             padding: 6px;
         }
 
-        /* BIG FLASHCARD STYLE DRAGGABLE CARDS */
+        /* BIG FLASHCARD STYLE DRAGGABLE CARDS (WITH UD DIGI KYOKASHO N FONT) */
         .drag-card {
             background: #ffffff;
             border: 2px solid #ffb3c6;
             border-radius: 20px;
             padding: 18px;
             min-height: 110px;
-            font-family: var(--font-jp);
-            font-size: 1.6rem;
+            font-family: var(--font-jp) !important;
+            font-size: 1.65rem;
             font-weight: 700;
             color: var(--primary);
             cursor: grab;
@@ -458,6 +459,10 @@
             transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             text-align: center;
             line-height: 1.25;
+        }
+
+        .drag-card * {
+            font-family: var(--font-jp) !important;
         }
 
         .drag-card:hover {
@@ -481,13 +486,17 @@
             border: 2px solid var(--primary);
             border-radius: 20px;
             padding: 18px;
-            font-family: var(--font-jp);
-            font-size: 1.6rem;
+            font-family: var(--font-jp) !important;
+            font-size: 1.65rem;
             font-weight: 700;
             color: var(--primary);
             box-shadow: 0 15px 30px rgba(255, 107, 139, 0.35);
             text-align: center;
             min-width: 200px;
+        }
+
+        .drag-clone * {
+            font-family: var(--font-jp) !important;
         }
 
         /* BIG FLASHCARD STYLE TARGET DROP ZONES */
@@ -683,7 +692,7 @@
                 items: [
                     { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "✈️" },
                     { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "🚢" },
-                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟ", icon: "🚃" },
+                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟฟ้า", icon: "🚃" },
                     { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "🚇" },
                     { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "🚅" },
                     { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "🚌" },
@@ -738,7 +747,7 @@
                     { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "6️⃣" },
                     { hiragana: "なのか", kanji: "-", thai: "วันที่ 7 / 7 วัน", icon: "7️⃣" },
                     { hiragana: "ようか", kanji: "-", thai: "วันที่ 8 / 8 วัน", icon: "8️⃣" },
-                    { hiragana: "こคน", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "9️⃣" },
+                    { hiragana: "ここのか", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "9️⃣" },
                     { hiragana: "とおか", kanji: "-", thai: "วันที่ 10 / 10 วัน", icon: "🔟" },
                     { hiragana: "じゅうよっか", kanji: "-", thai: "วันที่ 14 / 14 วัน", icon: "1️⃣4️⃣" },
                     { hiragana: "はつか", kanji: "-", thai: "วันที่ 20 / 20 วัน", icon: "2️⃣0️⃣" },
@@ -750,9 +759,6 @@
                 ]
             }
         ];
-
-        // Fixed typo for day 9
-        vocabularyData[5].items[8].hiragana = "ここのか";
 
         let activeCategoryIndex = 0;
         let activeItems = [];
@@ -913,7 +919,6 @@
                 if (categoryObj) words = [...categoryObj.items];
             }
 
-            // Shuffle words without slicing so ALL words in category are included
             words.sort(() => 0.5 - Math.random());
 
             gameTotalWords = words.length;

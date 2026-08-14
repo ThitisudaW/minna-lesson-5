@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minna no Nihongo Lesson 5 - Flashcards & Big Card Drag Match Game</title>
+    <title>Minna no Nihongo Lesson 5 - Modern Vector Flashcards & Drag Match</title>
     
-    <!-- Modern Japanese & Thai Fonts: UD Digi Kyokasho N Fallbacks, Zen Maru Gothic, Klee One, Prompt -->
+    <!-- Modern Japanese & Thai Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Prompt:wght@300;400;500;600;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
     
+    <!-- Lucide Modern Vector Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         :root {
             --primary: #ff6b8b;
@@ -25,7 +28,6 @@
             --radius-lg: 24px;
             --radius-md: 16px;
             
-            /* UD Digi Kyokasho N Font Stack */
             --font-jp: "UD Digi Kyokasho N", "UD デジタル教科書体 N", "Zen Maru Gothic", "Klee One", "Noto Sans JP", sans-serif;
             --font-th: 'Prompt', sans-serif;
         }
@@ -211,7 +213,7 @@
         }
 
         .step-btn {
-            background: #ffffff;
+            background: #f8fafc;
             border: 1.5px solid #edf2f7;
             color: var(--text-main);
             padding: 8px 18px;
@@ -374,12 +376,28 @@
             background: var(--card-back-bg);
             color: #ffffff;
             transform: rotateY(180deg);
-            gap: 8px;
+            gap: 6px;
         }
 
-        .visual-icon {
-            font-size: 2.5rem;
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+        /* Modern Vector Icon Wrappers */
+        .vector-icon-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+
+        .vector-icon-badge svg {
+            width: 28px;
+            height: 28px;
+            stroke-width: 2.2px;
         }
 
         .th-meaning {
@@ -421,7 +439,6 @@
             gap: 15px;
         }
 
-        /* Side by side Game Board */
         .game-board {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -437,7 +454,6 @@
             padding: 6px;
         }
 
-        /* BIG FLASHCARD STYLE DRAGGABLE CARDS (WITH UD DIGI KYOKASHO N FONT) */
         .drag-card {
             background: #ffffff;
             border: 2px solid #ffb3c6;
@@ -476,7 +492,6 @@
             cursor: grabbing;
         }
 
-        /* Touch Tracking Avatar */
         .drag-clone {
             position: fixed;
             pointer-events: none;
@@ -499,7 +514,6 @@
             font-family: var(--font-jp) !important;
         }
 
-        /* BIG FLASHCARD STYLE TARGET DROP ZONES */
         .drop-zone {
             background: #f8fafc;
             border: 2px dashed #cbd5e1;
@@ -514,6 +528,24 @@
             position: relative;
         }
 
+        .drop-zone-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .drop-zone-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.2px;
+        }
+
         .drop-zone-label {
             font-size: 1.2rem;
             font-weight: 600;
@@ -522,7 +554,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
         }
 
         .drop-zone.hovered {
@@ -577,7 +608,6 @@
             .card { height: 165px; }
             .jp-hiragana { font-size: 1.35rem; }
             .th-meaning { font-size: 1.05rem; }
-            .visual-icon { font-size: 2rem; }
             .stepper-bar { flex-direction: column; gap: 10px; }
             .game-board { grid-template-columns: 1fr; gap: 15px; }
             .drag-card, .drop-zone { min-height: 95px; }
@@ -664,15 +694,16 @@
     </div>
 
     <script>
+        // Vocabulary dataset with modern Lucide icon names
         const vocabularyData = [
             {
                 id: 'verbs',
                 navName: '1. กริยา',
                 title: '🌸 หมวดที่ 1: คำกริยา (Verbs)',
                 items: [
-                    { hiragana: "いきます", kanji: "行きます", thai: "ไป", icon: "🚶‍♂️" },
-                    { hiragana: "きます", kanji: "来ます", thai: "มา", icon: "🏃‍♀️" },
-                    { hiragana: "かえります", kanji: "帰ります", thai: "กลับ", icon: "🏠" }
+                    { hiragana: "いきます", kanji: "行きます", thai: "ไป", icon: "footprints" },
+                    { hiragana: "きます", kanji: "来ます", thai: "มา", icon: "corner-down-left" },
+                    { hiragana: "かえります", kanji: "帰ります", thai: "กลับ", icon: "home" }
                 ]
             },
             {
@@ -680,9 +711,9 @@
                 navName: '2. สถานที่',
                 title: '🏫 หมวดที่ 2: สถานที่ (Places)',
                 items: [
-                    { hiragana: "がっこう", kanji: "学校", thai: "โรงเรียน", icon: "🏫" },
-                    { hiragana: "スーパー", kanji: "-", thai: "ซูเปอร์มาร์เก็ต", icon: "🛒" },
-                    { hiragana: "えき", kanji: "駅", thai: "สถานีรถไฟ", icon: "🚉" }
+                    { hiragana: "がっこう", kanji: "学校", thai: "โรงเรียน", icon: "graduation-cap" },
+                    { hiragana: "スーパー", kanji: "-", thai: "ซูเปอร์มาร์เก็ต", icon: "shopping-cart" },
+                    { hiragana: "えき", kanji: "駅", thai: "สถานีรถไฟ", icon: "map-pin" }
                 ]
             },
             {
@@ -690,15 +721,15 @@
                 navName: '3. ยานพาหนะ',
                 title: '🚆 หมวดที่ 3: ยานพาหนะ (Vehicles)',
                 items: [
-                    { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "✈️" },
-                    { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "🚢" },
-                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟฟ้า", icon: "🚃" },
-                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "🚇" },
-                    { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "🚅" },
-                    { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "🚌" },
-                    { hiragana: "タクシー", kanji: "-", thai: "รถแท็กซี่", icon: "🚕" },
-                    { hiragana: "じてんしゃ", kanji: "自転車", thai: "จักรยาน", icon: "🚲" },
-                    { hiragana: "あるいて", kanji: "歩いて", thai: "เดิน", icon: "👟" }
+                    { hiragana: "ひこうき", kanji: "飛行機", thai: "เครื่องบิน", icon: "plane" },
+                    { hiragana: "ふね", kanji: "船", thai: "เรือ", icon: "ship" },
+                    { hiragana: "でんしゃ", kanji: "電車", thai: "รถไฟฟ้า", icon: "train" },
+                    { hiragana: "ちかてつ", kanji: "地下鉄", thai: "รถไฟใต้ดิน", icon: "subway" },
+                    { hiragana: "しんかんせん", kanji: "新幹線", thai: "รถไฟชินคันเซ็น", icon: "zap" },
+                    { hiragana: "バス", kanji: "-", thai: "รถบัส", icon: "bus" },
+                    { hiragana: "タクシー", kanji: "-", thai: "รถแท็กซี่", icon: "car" },
+                    { hiragana: "じてんしゃ", kanji: "自転車", thai: "จักรยาน", icon: "bike" },
+                    { hiragana: "あるいて", kanji: "歩いて", thai: "เดิน", icon: "footprints" }
                 ]
             },
             {
@@ -706,12 +737,12 @@
                 navName: '4. บุคคล',
                 title: '👥 หมวดที่ 4: บุคคล (People)',
                 items: [
-                    { hiragana: "ひと", kanji: "人", thai: "คน, ผู้คน", icon: "👤" },
-                    { hiragana: "ともだち", kanji: "友達", thai: "เพื่อน", icon: "🤝" },
-                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนผู้ชาย", icon: "👨" },
-                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนผู้หญิง", icon: "👩" },
-                    { hiragana: "かぞく", kanji: "家族", thai: "ครอบครัว", icon: "👨‍👩‍👧‍👦" },
-                    { hiragana: "ひとりで", kanji: "一人で", thai: "คนเดียว", icon: "🧍" }
+                    { hiragana: "ひと", kanji: "人", thai: "คน, ผู้คน", icon: "user" },
+                    { hiragana: "ともだち", kanji: "友達", thai: "เพื่อน", icon: "users" },
+                    { hiragana: "かれ", kanji: "彼", thai: "เขา (ผู้ชาย), แฟนผู้ชาย", icon: "user-check" },
+                    { hiragana: "かのじょ", kanji: "彼女", thai: "เธอ, แฟนผู้หญิง", icon: "heart-handshake" },
+                    { hiragana: "かぞく", kanji: "家族", thai: "ครอบครัว", icon: "home" },
+                    { hiragana: "ひとりで", kanji: "一人で", thai: "คนเดียว", icon: "user-minus" }
                 ]
             },
             {
@@ -719,19 +750,19 @@
                 navName: '5. เวลา/ช่วงเวลา',
                 title: '⏰ หมวดที่ 5: เวลา/สัปดาห์/เดือน/ปี (Time)',
                 items: [
-                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "⬅️📅" },
-                    { hiragana: "こんしゅう", kanji: "今週", thai: "สัปดาห์นี้", icon: "📅" },
-                    { hiragana: "らいしゅう", kanji: "来週", thai: "สัปดาห์หน้า", icon: "📅➡️" },
-                    { hiragana: "せんげつ", kanji: "先月", thai: "เดือนที่แล้ว", icon: "🌙⬅️" },
-                    { hiragana: "こんげつ", kanji: "今月", thai: "เดือนนี้", icon: "🌙" },
-                    { hiragana: "らいげつ", kanji: "来月", thai: "เดือนหน้า", icon: "🌙➡️" },
-                    { hiragana: "きょねん", kanji: "去年", thai: "ปีที่แล้ว", icon: "⏳" },
-                    { hiragana: "ことし", kanji: "今年", thai: "ปีนี้", icon: "✨" },
-                    { hiragana: "らいねん", kanji: "来年", thai: "ปีหน้า", icon: "🚀" },
-                    { hiragana: "ーねん", kanji: "―年", thai: "ปี...", icon: "🔢" },
-                    { hiragana: "なんねん", kanji: "何年", thai: "ปีอะไร / กี่ปี", icon: "❓" },
-                    { hiragana: "ーがつ", kanji: "―月", thai: "เดือน...", icon: "🗓️" },
-                    { hiragana: "なんがつ", kanji: "何月", thai: "เดือนอะไร", icon: "❓" }
+                    { hiragana: "せんしゅう", kanji: "先週", thai: "สัปดาห์ที่แล้ว", icon: "calendar-arrow-up" },
+                    { hiragana: "こんしゅう", kanji: "今週", thai: "สัปดาห์นี้", icon: "calendar-days" },
+                    { hiragana: "らいしゅう", kanji: "来週", thai: "สัปดาห์หน้า", icon: "calendar-plus" },
+                    { hiragana: "せんげつ", kanji: "先月", thai: "เดือนที่แล้ว", icon: "calendar-minus" },
+                    { hiragana: "こんげつ", kanji: "今月", thai: "เดือนนี้", icon: "calendar-check" },
+                    { hiragana: "らいげつ", kanji: "来月", thai: "เดือนหน้า", icon: "calendar-range" },
+                    { hiragana: "きょねん", kanji: "去年", thai: "ปีที่แล้ว", icon: "history" },
+                    { hiragana: "ことし", kanji: "今年", thai: "ปีนี้", icon: "sparkles" },
+                    { hiragana: "らいねん", kanji: "来年", thai: "ปีหน้า", icon: "rocket" },
+                    { hiragana: "ーねん", kanji: "―年", thai: "ปี...", icon: "hash" },
+                    { hiragana: "なんねん", kanji: "何年", thai: "ปีอะไร / กี่ปี", icon: "help-circle" },
+                    { hiragana: "ーがつ", kanji: "―月", thai: "เดือน...", icon: "calendar" },
+                    { hiragana: "なんがつ", kanji: "何月", thai: "เดือนอะไร", icon: "help-circle" }
                 ]
             },
             {
@@ -739,23 +770,23 @@
                 navName: '6. วันที่',
                 title: '📅 หมวดที่ 6: วันที่ และวันสำคัญ (Dates)',
                 items: [
-                    { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "1️⃣" },
-                    { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "2️⃣" },
-                    { hiragana: "みっか", kanji: "-", thai: "วันที่ 3 / 3 วัน", icon: "3️⃣" },
-                    { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "4️⃣" },
-                    { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "5️⃣" },
-                    { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "6️⃣" },
-                    { hiragana: "なのか", kanji: "-", thai: "วันที่ 7 / 7 วัน", icon: "7️⃣" },
-                    { hiragana: "ようか", kanji: "-", thai: "วันที่ 8 / 8 วัน", icon: "8️⃣" },
-                    { hiragana: "ここのか", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "9️⃣" },
-                    { hiragana: "とおか", kanji: "-", thai: "วันที่ 10 / 10 วัน", icon: "🔟" },
-                    { hiragana: "じゅうよっか", kanji: "-", thai: "วันที่ 14 / 14 วัน", icon: "1️⃣4️⃣" },
-                    { hiragana: "はつか", kanji: "-", thai: "วันที่ 20 / 20 วัน", icon: "2️⃣0️⃣" },
-                    { hiragana: "にじゅうよっか", kanji: "-", thai: "วันที่ 24 / 24 วัน", icon: "2️⃣4️⃣" },
-                    { hiragana: "ーにち", kanji: "―日", thai: "วันที่... / ...วัน", icon: "📆" },
-                    { hiragana: "なんにち", kanji: "何日", thai: "วันที่เท่าไร / กี่วัน", icon: "❓" },
-                    { hiragana: "いつ", kanji: "-", thai: "เมื่อไร", icon: "⏰" },
-                    { hiragana: "たんじょうび", kanji: "誕生日", thai: "วันเกิด", icon: "🎂" }
+                    { hiragana: "ついたち", kanji: "-", thai: "วันที่ 1", icon: "calendar-days" },
+                    { hiragana: "ふつか", kanji: "-", thai: "วันที่ 2 / 2 วัน", icon: "calendar-days" },
+                    { hiragana: "みっか", kanji: "-", thai: "วันที่ 3 / 3 วัน", icon: "calendar-days" },
+                    { hiragana: "よっか", kanji: "-", thai: "วันที่ 4 / 4 วัน", icon: "calendar-days" },
+                    { hiragana: "いつか", kanji: "-", thai: "วันที่ 5 / 5 วัน", icon: "calendar-days" },
+                    { hiragana: "むいか", kanji: "-", thai: "วันที่ 6 / 6 วัน", icon: "calendar-days" },
+                    { hiragana: "なのか", kanji: "-", thai: "วันที่ 7 / 7 วัน", icon: "calendar-days" },
+                    { hiragana: "ようか", kanji: "-", thai: "วันที่ 8 / 8 วัน", icon: "calendar-days" },
+                    { hiragana: "ここのか", kanji: "-", thai: "วันที่ 9 / 9 วัน", icon: "calendar-days" },
+                    { hiragana: "とおか", kanji: "-", thai: "วันที่ 10 / 10 วัน", icon: "calendar-days" },
+                    { hiragana: "じゅうよっか", kanji: "-", thai: "วันที่ 14 / 14 วัน", icon: "calendar-days" },
+                    { hiragana: "はつか", kanji: "-", thai: "วันที่ 20 / 20 วัน", icon: "calendar-days" },
+                    { hiragana: "にじゅうよっか", kanji: "-", thai: "วันที่ 24 / 24 วัน", icon: "calendar-days" },
+                    { hiragana: "ーにち", kanji: "―日", thai: "วันที่... / ...วัน", icon: "calendar" },
+                    { hiragana: "なんにち", kanji: "何日", thai: "วันที่เท่าไร / กี่วัน", icon: "help-circle" },
+                    { hiragana: "いつ", kanji: "-", thai: "เมื่อไร", icon: "clock" },
+                    { hiragana: "たんじょうび", kanji: "誕生日", thai: "วันเกิด", icon: "gift" }
                 ]
             }
         ];
@@ -852,13 +883,15 @@
                             ${kanjiMarkup}
                         </div>
                         <div class="card-back">
-                            <div class="visual-icon">${item.icon}</div>
+                            <div class="vector-icon-badge"><i data-lucide="${item.icon}"></i></div>
                             <div class="th-meaning">${item.thai}</div>
                         </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
+
+            if (window.lucide) lucide.createIcons();
         }
 
         function shuffleCards() {
@@ -943,7 +976,7 @@
                 poolEl.appendChild(card);
             });
 
-            // Render Thai Big Drop Slots
+            // Render Thai Big Drop Slots with Vector Icons
             const slotsEl = document.getElementById('dropSlots');
             slotsEl.innerHTML = '';
             const shuffledThai = [...words].sort(() => 0.5 - Math.random());
@@ -952,9 +985,16 @@
                 const slot = document.createElement('div');
                 slot.className = 'drop-zone';
                 slot.dataset.id = word.hiragana;
-                slot.innerHTML = `<div class="drop-zone-label"><span>${word.icon}</span> <span>${word.thai}</span></div>`;
+                slot.innerHTML = `
+                    <div class="drop-zone-label">
+                        <span class="drop-zone-icon"><i data-lucide="${word.icon}"></i></span>
+                        <span>${word.thai}</span>
+                    </div>
+                `;
                 slotsEl.appendChild(slot);
             });
+
+            if (window.lucide) lucide.createIcons();
         }
 
         /* Universal Pointer/Touch Drag Handling */
